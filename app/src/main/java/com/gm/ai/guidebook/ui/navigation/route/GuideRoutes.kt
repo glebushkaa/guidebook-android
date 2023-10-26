@@ -14,3 +14,7 @@ object SplashScreenRoute : GuideRoute {
 object HomeScreenRoute : GuideRoute {
     override val route: String = "home"
 }
+
+object DetailsScreenRoute : GuideRoute {
+    override val route: String = "details"
+}

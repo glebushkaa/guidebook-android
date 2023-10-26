@@ -9,4 +9,5 @@ data class Guide(
     val title: String,
     val description: String,
     val imageUrl: String,
+    val favorite: Boolean = false,
 )

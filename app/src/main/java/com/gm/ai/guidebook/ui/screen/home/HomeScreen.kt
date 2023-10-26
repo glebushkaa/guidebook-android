@@ -96,7 +96,12 @@ fun HomeScreen(
                 animationSpec = tween(800),
             ),
         ) {
-            GuidesList(list = state.guides)
+            GuidesList(
+                list = state.guides,
+            ) {
+                val event = HomeEvent.NavigateToDetailsScreen(it)
+                onEvent(event)
+            }
         }
     }
 }

@@ -3,6 +3,10 @@ package com.gm.ai.guidebook
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -14,11 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,9 +55,15 @@ class MainActivity : ComponentActivity() {
                 initialValue = null,
             )
             val isTopBarVisible by remember {
-                derivedStateOf {
-                    currentEntry != null && currentEntry?.destination?.route != SplashScreenRoute.route
-                }
+                derivedStateOf { currentEntry != null && currentEntry?.destination?.route != SplashScreenRoute.route }
+            }
+            val backgroundColor = GuideTheme.palette.background
+            val surfaceColor = GuideTheme.palette.surface
+
+            LaunchedEffect(key1 = isTopBarVisible) {
+                val window = this@MainActivity.window
+                val color = if (isTopBarVisible) surfaceColor else backgroundColor
+                window.statusBarColor = color.toArgb()
             }
 
             Scaffold(
@@ -59,13 +71,25 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .background(GuideTheme.palette.background),
                 topBar = {
-                    if (!isTopBarVisible) return@Scaffold
-                    GuideTopBar()
+                    AnimatedVisibility(
+                        visible = isTopBarVisible,
+                        enter = expandVertically(
+                            expandFrom = Alignment.Top,
+                            animationSpec = tween(800),
+                        ),
+                        exit = shrinkVertically(
+                            shrinkTowards = Alignment.Top,
+                            animationSpec = tween(800),
+                        ),
+                    ) {
+                        GuideTopBar()
+                    }
                 },
                 content = {
                     GuideNavHost(
                         modifier = Modifier
                             .fillMaxSize()
+                            .background(GuideTheme.palette.background)
                             .padding(it),
                         controller = controller,
                     )
