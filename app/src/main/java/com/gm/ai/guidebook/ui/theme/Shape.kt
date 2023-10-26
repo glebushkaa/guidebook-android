@@ -13,5 +13,6 @@ data class Shape(
     val medium: RoundedCornerShape = RoundedCornerShape(12.dp),
     val large: RoundedCornerShape = RoundedCornerShape(16.dp),
     val huge: RoundedCornerShape = RoundedCornerShape(20.dp),
-    val gigantic: RoundedCornerShape = RoundedCornerShape(24.dp)
+    val gigantic: RoundedCornerShape = RoundedCornerShape(24.dp),
+    val round: RoundedCornerShape = RoundedCornerShape(360.dp),
 )

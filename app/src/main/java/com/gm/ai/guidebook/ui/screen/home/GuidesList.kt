@@ -26,6 +26,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import coil.compose.AsyncImage
 import com.gm.ai.guidebook.R
+import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
 import com.gm.ai.guidebook.model.Guide
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
@@ -37,6 +38,7 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme
 fun GuidesList(
     modifier: Modifier = Modifier,
     list: List<Guide> = emptyList(),
+    guideClicked: (Long) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier
@@ -50,7 +52,10 @@ fun GuidesList(
             items = list,
             key = { guide -> guide.id },
         ) { guide ->
-            GuideItem(guide = guide)
+            GuideItem(
+                guide = guide,
+                guideClicked = guideClicked,
+            )
         }
     }
 }
@@ -59,6 +64,7 @@ fun GuidesList(
 private fun GuideItem(
     modifier: Modifier = Modifier,
     guide: Guide,
+    guideClicked: (Long) -> Unit = {},
 ) {
     val smallOffset = GuideTheme.offset.small
     val mediumOffset = GuideTheme.offset.medium
@@ -68,7 +74,10 @@ private fun GuideItem(
         modifier = modifier
             .height(100.dp)
             .fillMaxWidth()
-            .background(GuideTheme.palette.surface),
+            .background(GuideTheme.palette.surface)
+            .clickableWithoutRipple {
+                guideClicked.invoke(guide.id)
+            },
         constraintSet = guideItemDecoupledConstraints(
             smallOffset = smallOffset,
             mediumOffset = mediumOffset,

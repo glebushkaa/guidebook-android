@@ -5,6 +5,7 @@ import com.gm.ai.guidebook.core.android.stateReducerFlow
 import com.gm.ai.guidebook.model.Guide
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,8 +21,9 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
         initialState = HomeState(),
         reduceState = ::handleEvent,
     )
+    val navigationEffect = Channel<HomeNavigationEffect>()
 
-    val list = listOf(
+    private val list = listOf(
         Guide(
             id = 1,
             title = "C# Tutorial",
@@ -61,15 +63,19 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
     }
 
     private fun handleEvent(currentState: HomeState, event: HomeEvent): HomeState {
-        return when (event) {
-            is HomeEvent.UpdateGuidesList -> {
-                currentState.copy(guides = event.list)
-            }
-
-            is HomeEvent.SendSearchQuery -> {
-                filterBySearchQuery(event.query)
-                currentState.copy(searchQuery = event.query)
-            }
-        }
+        event.handle(
+            updateGuidesList = { list ->
+                return currentState.copy(guides = list)
+            },
+            sendSearchQuery = { query ->
+                filterBySearchQuery(query)
+                return currentState.copy(searchQuery = query)
+            },
+            navigateToDetailsScreen = { guideId ->
+                val navEffect = HomeNavigationEffect.NavigateDetailsScreen(guideId)
+                navigationEffect.trySend(navEffect)
+            },
+        )
+        return currentState
     }
 }
