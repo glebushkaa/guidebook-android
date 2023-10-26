@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface StateReducerFlow<State, Action> : StateFlow<State> {
 
-    fun handleAction(action: Action)
+    fun handleEvent(action: Action)
 }
