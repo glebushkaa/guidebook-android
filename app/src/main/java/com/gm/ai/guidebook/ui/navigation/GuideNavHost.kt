@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
+import com.gm.ai.guidebook.ui.navigation.destination.homeScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.splashScreenDestination
 import com.gm.ai.guidebook.ui.navigation.route.HomeScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
@@ -23,7 +25,11 @@ fun GuideNavHost(
         startDestination = SplashScreenRoute.route,
     ) {
         splashScreenDestination {
-            controller.navigate(HomeScreenRoute.route)
+            controller.navigatePopUpInclusive(
+                route = HomeScreenRoute.route,
+                popUpRoute = SplashScreenRoute.route,
+            )
         }
+        homeScreenDestination()
     }
 }

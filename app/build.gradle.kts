@@ -61,6 +61,10 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.material)
     implementation(libs.androidx.activity.compose)
+    
+    implementation(libs.lifecycle.runtime.compose)
+
+    implementation(libs.coil.compose)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.timber)
