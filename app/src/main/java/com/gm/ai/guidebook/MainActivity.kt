@@ -30,8 +30,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gm.ai.guidebook.ui.navigation.GuideNavHost
+import com.gm.ai.guidebook.ui.navigation.components.GuideBottomNavigation
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
@@ -54,15 +56,15 @@ class MainActivity : ComponentActivity() {
             val currentEntry by controller.currentBackStackEntryFlow.collectAsStateWithLifecycle(
                 initialValue = null,
             )
-            val isTopBarVisible by remember {
+            val areBarsVisible by remember {
                 derivedStateOf { currentEntry != null && currentEntry?.destination?.route != SplashScreenRoute.route }
             }
             val backgroundColor = GuideTheme.palette.background
             val surfaceColor = GuideTheme.palette.surface
 
-            LaunchedEffect(key1 = isTopBarVisible) {
+            LaunchedEffect(key1 = areBarsVisible) {
                 val window = this@MainActivity.window
-                val color = if (isTopBarVisible) surfaceColor else backgroundColor
+                val color = if (areBarsVisible) surfaceColor else backgroundColor
                 window.statusBarColor = color.toArgb()
             }
 
@@ -71,19 +73,10 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .background(GuideTheme.palette.background),
                 topBar = {
-                    AnimatedVisibility(
-                        visible = isTopBarVisible,
-                        enter = expandVertically(
-                            expandFrom = Alignment.Top,
-                            animationSpec = tween(800),
-                        ),
-                        exit = shrinkVertically(
-                            shrinkTowards = Alignment.Top,
-                            animationSpec = tween(800),
-                        ),
-                    ) {
-                        GuideTopBar()
-                    }
+                    AnimatedTopBar(
+                        modifier = Modifier,
+                        visible = areBarsVisible,
+                    )
                 },
                 content = {
                     GuideNavHost(
@@ -94,7 +87,59 @@ class MainActivity : ComponentActivity() {
                         controller = controller,
                     )
                 },
+                bottomBar = {
+                    AnimateBottomNavBar(
+                        modifier = Modifier,
+                        controller = controller,
+                        visible = areBarsVisible,
+                    )
+                },
             )
+        }
+    }
+
+    @Composable
+    private fun AnimateBottomNavBar(
+        modifier: Modifier = Modifier,
+        controller: NavHostController,
+        visible: Boolean,
+    ) {
+        AnimatedVisibility(
+            modifier = modifier,
+            visible = visible,
+            enter = expandVertically(
+                expandFrom = Alignment.Bottom,
+                animationSpec = tween(800),
+            ),
+            exit = shrinkVertically(
+                shrinkTowards = Alignment.Bottom,
+                animationSpec = tween(800),
+            ),
+        ) {
+            GuideBottomNavigation(
+                navController = controller,
+            )
+        }
+    }
+
+    @Composable
+    private fun AnimatedTopBar(
+        modifier: Modifier = Modifier,
+        visible: Boolean,
+    ) {
+        AnimatedVisibility(
+            modifier = modifier,
+            visible = visible,
+            enter = expandVertically(
+                expandFrom = Alignment.Top,
+                animationSpec = tween(800),
+            ),
+            exit = shrinkVertically(
+                shrinkTowards = Alignment.Top,
+                animationSpec = tween(800),
+            ),
+        ) {
+            GuideTopBar()
         }
     }
 

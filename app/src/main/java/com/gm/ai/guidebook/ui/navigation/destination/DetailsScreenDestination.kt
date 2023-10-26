@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.gm.ai.guidebook.core.common.ONE_SECOND
+import com.gm.ai.guidebook.core.common.EIGHT_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.navigation.route.DetailsScreenRoute
 import com.gm.ai.guidebook.ui.screen.info.DetailsScreen
 import com.gm.ai.guidebook.ui.screen.info.DetailsViewModel
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
  */
 
-private val animSpec = tween<IntOffset>(ONE_SECOND.toInt())
+private val animSpec = tween<IntOffset>(EIGHT_HUNDRED_MILLIS.toInt())
 
 fun NavGraphBuilder.detailsScreenDestination(
     navigateBack: () -> Unit = {},
