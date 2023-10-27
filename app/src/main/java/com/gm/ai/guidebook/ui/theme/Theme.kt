@@ -29,8 +29,8 @@ fun GuideBookTheme(
             window.statusBarColor = palette.background.toArgb()
             window.navigationBarColor = palette.background.toArgb()
             WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = darkTheme
-                isAppearanceLightNavigationBars = darkTheme
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
             }
         }
     }

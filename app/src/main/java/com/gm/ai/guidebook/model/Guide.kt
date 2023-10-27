@@ -5,9 +5,10 @@ package com.gm.ai.guidebook.model
  */
 
 data class Guide(
-    val id: Long,
+    val id: String,
     val title: String,
+    val emoji: String,
     val description: String,
     val imageUrl: String,
-    val favorite: Boolean = false,
+    val authorId: String,
 )

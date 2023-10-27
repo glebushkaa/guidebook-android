@@ -1,16 +1,14 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
-package com.gm.ai.guidebook.ui.screen.home
+package com.gm.ai.guidebook.ui.components
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +18,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
-import coil.compose.AsyncImage
 import com.gm.ai.guidebook.R
+import com.gm.ai.guidebook.core.android.extensions.applyIf
 import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
 import com.gm.ai.guidebook.model.Guide
 import com.gm.ai.guidebook.ui.theme.GuideTheme
@@ -38,14 +37,19 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme
 fun GuidesList(
     modifier: Modifier = Modifier,
     list: List<Guide> = emptyList(),
-    guideClicked: (Long) -> Unit = {},
+    guideClicked: (String) -> Unit = {},
 ) {
+    val topItemShape = GuideTheme.shape.medium.copy(
+        bottomEnd = CornerSize(0.dp),
+        bottomStart = CornerSize(0.dp),
+    )
+    val bottomItemShape = GuideTheme.shape.medium.copy(
+        topStart = CornerSize(0.dp),
+        topEnd = CornerSize(0.dp),
+    )
+
     LazyColumn(
-        modifier = modifier
-            .clip(
-                GuideTheme.shape.medium,
-            )
-            .animateContentSize(),
+        modifier = modifier.animateContentSize(),
         verticalArrangement = Arrangement.spacedBy(GuideTheme.offset.min),
     ) {
         items(
@@ -53,9 +57,19 @@ fun GuidesList(
             key = { guide -> guide.id },
         ) { guide ->
             GuideItem(
+                modifier = Modifier
+                    .applyIf(guide.id == list.first().id) {
+                        clip(topItemShape)
+                    }
+                    .applyIf(guide.id == list.last().id) {
+                        clip(bottomItemShape)
+                    },
                 guide = guide,
                 guideClicked = guideClicked,
             )
+        }
+        item {
+            Spacer(modifier = Modifier.height(GuideTheme.offset.large))
         }
     }
 }
@@ -64,7 +78,7 @@ fun GuidesList(
 private fun GuideItem(
     modifier: Modifier = Modifier,
     guide: Guide,
-    guideClicked: (Long) -> Unit = {},
+    guideClicked: (String) -> Unit = {},
 ) {
     val smallOffset = GuideTheme.offset.small
     val mediumOffset = GuideTheme.offset.medium
@@ -85,16 +99,16 @@ private fun GuideItem(
             giganticOffset = giganticOffset,
         ),
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(40.dp)
-                .layoutId(GUIDE_ITEM_IMAGE),
-            model = guide.imageUrl,
-            contentDescription = null,
+        Text(
+            modifier = Modifier.layoutId(GUIDE_ITEM_IMAGE),
+            text = guide.emoji,
+            fontSize = 40.sp,
         )
         Text(
             modifier = Modifier.layoutId(GUIDE_ITEM_TITLE),
             text = guide.title,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             style = GuideTheme.typography.titleMedium,
             color = GuideTheme.palette.onSurface,
         )

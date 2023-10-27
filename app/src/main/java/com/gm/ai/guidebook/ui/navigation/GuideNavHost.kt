@@ -7,7 +7,9 @@ import androidx.navigation.compose.NavHost
 import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
 import com.gm.ai.guidebook.core.android.extensions.navigateSingleTopTo
 import com.gm.ai.guidebook.ui.navigation.destination.detailsScreenDestination
+import com.gm.ai.guidebook.ui.navigation.destination.favoritesScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.homeScreenDestination
+import com.gm.ai.guidebook.ui.navigation.destination.settingsScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.splashScreenDestination
 import com.gm.ai.guidebook.ui.navigation.route.DetailsScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.HomeScreenRoute
@@ -38,8 +40,14 @@ fun GuideNavHost(
                 route = DetailsScreenRoute.route,
             )
         }
+        favoritesScreenDestination {
+            controller.navigateSingleTopTo(
+                route = DetailsScreenRoute.route,
+            )
+        }
         detailsScreenDestination {
             controller.popBackStack()
         }
+        settingsScreenDestination()
     }
 }

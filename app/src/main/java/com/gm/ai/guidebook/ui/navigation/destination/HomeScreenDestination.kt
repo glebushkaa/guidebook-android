@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
  */
 
 fun NavGraphBuilder.homeScreenDestination(
-    navigateDetailsScreen: (Long) -> Unit = {},
+    navigateDetailsScreen: (String) -> Unit = {},
 ) {
     composable(route = HomeScreenRoute.route) {
         val viewModel = hiltViewModel<HomeViewModel>()

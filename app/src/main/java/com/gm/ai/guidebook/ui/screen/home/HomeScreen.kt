@@ -7,8 +7,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -20,11 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import com.gm.ai.guidebook.R
+import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
+import com.gm.ai.guidebook.core.common.TWO_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.components.GuideSearch
+import com.gm.ai.guidebook.ui.components.GuidesList
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
@@ -45,20 +49,11 @@ fun HomeScreen(
     state: HomeState = HomeState(),
     onEvent: (HomeEvent) -> Unit = {},
 ) {
-    val mediumOffset = GuideTheme.offset.medium
-    val regularOffset = GuideTheme.offset.regular
-    val superGiganticOffset = GuideTheme.offset.superGigantic
-
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(GuideTheme.palette.background)
-            .padding(regularOffset),
-        constraintSet = homeScreenDecoupledConstraints(
-            mediumOffset = mediumOffset,
-            regularOffset = regularOffset,
-            superGiganticOffset = superGiganticOffset,
-        ),
+            .padding(GuideTheme.offset.regular),
     ) {
         GuideSearch(
             modifier = Modifier.layoutId(HOME_SEARCH_BAR),
@@ -68,39 +63,48 @@ fun HomeScreen(
                 onEvent(event)
             },
         )
-        AnimatedVisibility(
-            modifier = Modifier.layoutId(NO_GUIDES_ITEM),
-            visible = state.guides.isEmpty(),
-            enter = fadeIn(
-                animationSpec = tween(800),
-            ),
-            exit = fadeOut(
-                animationSpec = tween(200),
-            ),
-        ) {
-            NoGuideItems(
-                modifier = Modifier,
-            )
-        }
-        AnimatedVisibility(
+        Box(
             modifier = Modifier
-                .padding(bottom = regularOffset)
-                .layoutId(GUIDES_LIST),
-            visible = state.guides.isNotEmpty(),
-            enter = expandVertically(
-                expandFrom = Alignment.Top,
-                animationSpec = tween(800),
-            ),
-            exit = shrinkVertically(
-                shrinkTowards = Alignment.Top,
-                animationSpec = tween(800),
-            ),
+                .weight(1f)
+                .fillMaxWidth(),
         ) {
-            GuidesList(
-                list = state.guides,
+            this@Column.AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(bottom = GuideTheme.offset.superGigantic),
+                visible = state.guides.isEmpty(),
+                enter = fadeIn(
+                    animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
+                ),
+                exit = fadeOut(
+                    animationSpec = tween(TWO_HUNDRED_MILLIS.toInt()),
+                ),
             ) {
-                val event = HomeEvent.NavigateToDetailsScreen(it)
-                onEvent(event)
+                NoGuideItems(
+                    modifier = Modifier,
+                )
+            }
+            this@Column.AnimatedVisibility(
+                modifier = Modifier
+                    .padding(top = GuideTheme.offset.regular)
+                    .align(Alignment.TopCenter),
+                visible = state.guides.isNotEmpty(),
+                enter = expandVertically(
+                    animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
+                    expandFrom = Alignment.Top,
+                ),
+                exit = shrinkVertically(
+                    animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
+                    shrinkTowards = Alignment.Top,
+                ),
+            ) {
+                GuidesList(
+                    list = state.guides,
+                    guideClicked = {
+                        val event = HomeEvent.NavigateToDetailsScreen(it)
+                        onEvent(event)
+                    },
+                )
             }
         }
     }
