@@ -1,14 +1,16 @@
-package com.gm.ai.guidebook
+package com.gm.ai.guidebook.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,13 +27,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.gm.ai.guidebook.R
+import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.navigation.GuideNavHost
 import com.gm.ai.guidebook.ui.navigation.components.GuideBottomNavigation
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
@@ -39,8 +45,17 @@ import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
+ *
+ * TODO refactor
+ *
+ */
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,22 +66,25 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun GuideApp() {
-        GuideBookTheme {
-            val controller = rememberNavController()
-            val currentEntry by controller.currentBackStackEntryFlow.collectAsStateWithLifecycle(
-                initialValue = null,
-            )
-            val areBarsVisible by remember {
-                derivedStateOf { currentEntry != null && currentEntry?.destination?.route != SplashScreenRoute.route }
-            }
+        val systemDarkModeEnabled = isSystemInDarkTheme()
+        val darkModeEnabled by viewModel.darkModeFlow.collectAsStateWithLifecycle(
+            initialValue = systemDarkModeEnabled,
+        )
+
+        val controller = rememberNavController()
+        val currentEntry by controller.currentBackStackEntryFlow.collectAsStateWithLifecycle(
+            initialValue = null,
+        )
+        val areBarsVisible by remember {
+            derivedStateOf { currentEntry != null && currentEntry?.destination?.route != SplashScreenRoute.route }
+        }
+
+        GuideBookTheme(
+            darkTheme = darkModeEnabled ?: systemDarkModeEnabled,
+        ) {
+            val view = LocalView.current
             val backgroundColor = GuideTheme.palette.background
             val surfaceColor = GuideTheme.palette.surface
-
-            LaunchedEffect(key1 = areBarsVisible) {
-                val window = this@MainActivity.window
-                val color = if (areBarsVisible) surfaceColor else backgroundColor
-                window.statusBarColor = color.toArgb()
-            }
 
             Scaffold(
                 modifier = Modifier
@@ -95,6 +113,23 @@ class MainActivity : ComponentActivity() {
                     )
                 },
             )
+            LaunchedEffect(Unit) {
+                viewModel.saveSystemDarkMode(systemDarkModeEnabled)
+            }
+
+            LaunchedEffect(
+                key1 = areBarsVisible,
+                key2 = darkModeEnabled,
+            ) {
+                val window = this@MainActivity.window
+                val color = if (areBarsVisible) surfaceColor else backgroundColor
+                window.statusBarColor = color.toArgb()
+                window.navigationBarColor = color.toArgb()
+                WindowCompat.getInsetsController(window, view).apply {
+                    isAppearanceLightStatusBars = !(darkModeEnabled ?: systemDarkModeEnabled)
+                    isAppearanceLightNavigationBars = !(darkModeEnabled ?: systemDarkModeEnabled)
+                }
+            }
         }
     }
 
@@ -109,11 +144,11 @@ class MainActivity : ComponentActivity() {
             visible = visible,
             enter = expandVertically(
                 expandFrom = Alignment.Bottom,
-                animationSpec = tween(800),
+                animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
             ),
             exit = shrinkVertically(
                 shrinkTowards = Alignment.Bottom,
-                animationSpec = tween(800),
+                animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
             ),
         ) {
             GuideBottomNavigation(
@@ -132,11 +167,11 @@ class MainActivity : ComponentActivity() {
             visible = visible,
             enter = expandVertically(
                 expandFrom = Alignment.Top,
-                animationSpec = tween(800),
+                animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
             ),
             exit = shrinkVertically(
                 shrinkTowards = Alignment.Top,
-                animationSpec = tween(800),
+                animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
             ),
         ) {
             GuideTopBar()

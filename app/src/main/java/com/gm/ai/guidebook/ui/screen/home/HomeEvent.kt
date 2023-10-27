@@ -17,13 +17,13 @@ sealed class HomeEvent {
     ) : HomeEvent()
 
     data class NavigateToDetailsScreen(
-        val guideId: Long,
+        val guideId: String,
     ) : HomeEvent()
 
     inline fun handle(
         updateGuidesList: (List<Guide>) -> Unit = {},
         sendSearchQuery: (String) -> Unit = {},
-        navigateToDetailsScreen: (Long) -> Unit = {},
+        navigateToDetailsScreen: (String) -> Unit = {},
     ) {
         when (this) {
             is UpdateGuidesList -> updateGuidesList(list)

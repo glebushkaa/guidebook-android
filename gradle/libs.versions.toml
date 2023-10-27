@@ -3,6 +3,7 @@ activityCompose = "1.8.0"
 androidGradlePlugin = "8.0.2"
 androidxAppCompat = "1.6.1"
 androidxCore = "1.12.0"
+androidxDataStore = "1.0.0"
 androidxNavigation = "2.7.4"
 appcompat = "1.6.1"
 hilt = "2.46.1"
@@ -35,6 +36,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigation" }
+androidx-data-store = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDataStore" }
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }

@@ -103,7 +103,7 @@ fun DetailsScreen(
         )
         GuideIconButton(
             modifier = Modifier.layoutId(LIKE_BUTTON),
-            iconResId = if (state.guide?.favorite == true) {
+            iconResId = if (true) {
                 R.drawable.ic_filled_like
             } else {
                 R.drawable.ic_like

@@ -7,11 +7,11 @@ package com.gm.ai.guidebook.ui.screen.home
 sealed class HomeNavigationEffect {
 
     data class NavigateDetailsScreen(
-        val guideId: Long,
+        val guideId: String,
     ) : HomeNavigationEffect()
 
     inline fun handle(
-        navigateDetailsScreen: (Long) -> Unit = {},
+        navigateDetailsScreen: (String) -> Unit = {},
     ) {
         when (this) {
             is NavigateDetailsScreen -> navigateDetailsScreen(guideId)

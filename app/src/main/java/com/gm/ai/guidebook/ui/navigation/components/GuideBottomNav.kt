@@ -2,6 +2,7 @@ package com.gm.ai.guidebook.ui.navigation.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,7 +57,10 @@ fun GuideBottomNavigation(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.height(64.dp).fillMaxWidth(),
+        modifier = modifier
+            .height(72.dp)
+            .fillMaxWidth()
+            .background(GuideTheme.palette.surface),
     ) {
         Spacer(modifier = Modifier.width(GuideTheme.offset.tiny))
         bottomNavItems.forEach { route ->

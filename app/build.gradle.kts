@@ -66,6 +66,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation(libs.androidx.data.store)
+
     implementation(libs.androidx.appcompat)
     implementation(libs.timber)
 
