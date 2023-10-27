@@ -19,13 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
-import com.gm.ai.guidebook.core.android.extensions.toast
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
@@ -52,7 +50,6 @@ fun SettingsScreen(
     state: SettingsState = SettingsState(),
     sendEvent: (SettingsEvent) -> Unit = {},
 ) {
-    val context = LocalContext.current
     val isSystemInDarkMode = isSystemInDarkTheme()
 
     Column(
@@ -104,7 +101,8 @@ fun SettingsScreen(
                 top = GuideTheme.offset.regular,
             ),
             onClick = {
-                context.toast(message = "Logged out")
+                val event = SettingsEvent.LogOutClicked
+                sendEvent(event)
             },
         )
     }

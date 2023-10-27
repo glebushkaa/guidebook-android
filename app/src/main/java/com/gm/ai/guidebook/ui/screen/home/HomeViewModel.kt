@@ -23,6 +23,7 @@ class HomeViewModel @Inject constructor(
         reduceState = ::handleEvent,
     )
     val navigationEffect = Channel<HomeNavigationEffect>()
+    val sideEffect = Channel<HomeSideEffect>()
 
     init {
         fetchGuidesByQuery()
@@ -35,6 +36,8 @@ class HomeViewModel @Inject constructor(
         val list = getGuidesByQueryUseCase(params).getOrNull() ?: emptyList()
         val event = HomeEvent.UpdateGuidesList(list)
         state.handleEvent(event)
+        val effect = HomeSideEffect.ScrollTop
+        sideEffect.trySend(effect)
     }
 
     private fun handleEvent(currentState: HomeState, event: HomeEvent): HomeState {

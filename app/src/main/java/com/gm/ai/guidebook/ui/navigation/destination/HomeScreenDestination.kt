@@ -21,12 +21,18 @@ fun NavGraphBuilder.homeScreenDestination(
     composable(route = HomeScreenRoute.route) {
         val viewModel = hiltViewModel<HomeViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
+
         val navEffect by viewModel.navigationEffect
+            .receiveAsFlow()
+            .collectAsStateWithLifecycle(initialValue = null)
+
+        val sideEffect by viewModel.sideEffect
             .receiveAsFlow()
             .collectAsStateWithLifecycle(initialValue = null)
 
         HomeScreen(
             state = state,
+            sideEffect = sideEffect,
             onEvent = viewModel.state::handleEvent,
         )
 

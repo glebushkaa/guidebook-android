@@ -5,6 +5,8 @@ package com.gm.ai.guidebook.ui.screen.settings
  */
 
 sealed class SettingsEvent {
+    data object LogOutClicked : SettingsEvent()
+
     data class SendNotificationsSettingUpdate(
         val notificationsEnabled: Boolean,
     ) : SettingsEvent()
@@ -19,12 +21,14 @@ sealed class SettingsEvent {
         updateDarkModeSelector: (Boolean) -> Unit = {},
         sendSystemDarkModeSetting: (Boolean) -> Unit = {},
         sendNotificationsSettingUpdate: (Boolean) -> Unit = {},
+        logOutClicked: () -> Unit = {},
     ) {
         when (this) {
             AlterDarkMode -> alterDarkMode()
             is UpdateDarkModeSetting -> updateDarkModeSelector(darkMode)
             is SendSystemDarkModeSetting -> sendSystemDarkModeSetting(darkMode)
             is SendNotificationsSettingUpdate -> sendNotificationsSettingUpdate(notificationsEnabled)
+            LogOutClicked -> logOutClicked()
         }
     }
 }

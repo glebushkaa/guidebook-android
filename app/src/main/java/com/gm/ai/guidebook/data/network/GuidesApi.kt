@@ -13,7 +13,7 @@ interface GuidesApi {
 
     @GET("search/guides")
     suspend fun searchGuides(
-        @Header("Authorization") token: String,
+        @Header("Authorization") token: String = "",
         @Query("query") query: String = "",
     ): List<GuideDto>
 }

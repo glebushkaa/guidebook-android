@@ -9,10 +9,13 @@ import com.gm.ai.guidebook.core.android.extensions.navigateSingleTopTo
 import com.gm.ai.guidebook.ui.navigation.destination.detailsScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.favoritesScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.homeScreenDestination
+import com.gm.ai.guidebook.ui.navigation.destination.loginScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.settingsScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.splashScreenDestination
 import com.gm.ai.guidebook.ui.navigation.route.DetailsScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.HomeScreenRoute
+import com.gm.ai.guidebook.ui.navigation.route.LoginScreenRoute
+import com.gm.ai.guidebook.ui.navigation.route.SettingsScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
 
 /**
@@ -29,12 +32,20 @@ fun GuideNavHost(
         navController = controller,
         startDestination = SplashScreenRoute.route,
     ) {
-        splashScreenDestination {
-            controller.navigatePopUpInclusive(
-                route = HomeScreenRoute.route,
-                popUpRoute = SplashScreenRoute.route,
-            )
-        }
+        splashScreenDestination(
+            loginNavigate = {
+                controller.navigatePopUpInclusive(
+                    route = LoginScreenRoute.route,
+                    popUpRoute = SplashScreenRoute.route,
+                )
+            },
+            homeNavigate = {
+                controller.navigatePopUpInclusive(
+                    route = HomeScreenRoute.route,
+                    popUpRoute = SplashScreenRoute.route,
+                )
+            },
+        )
         homeScreenDestination {
             controller.navigateSingleTopTo(
                 route = DetailsScreenRoute.route,
@@ -48,6 +59,18 @@ fun GuideNavHost(
         detailsScreenDestination {
             controller.popBackStack()
         }
-        settingsScreenDestination()
+        settingsScreenDestination {
+            controller.navigatePopUpInclusive(
+                route = LoginScreenRoute.route,
+                popUpRoute = SettingsScreenRoute.route,
+            )
+        }
+
+        loginScreenDestination {
+            controller.navigatePopUpInclusive(
+                route = HomeScreenRoute.route,
+                popUpRoute = LoginScreenRoute.route,
+            )
+        }
     }
 }

@@ -27,16 +27,13 @@ import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
-import kotlinx.coroutines.delay
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
  */
 
 @Composable
-fun SplashScreen(
-    homeNavigate: () -> Unit = {},
-) {
+fun SplashScreen() {
     var logoAlpha by remember { mutableFloatStateOf(0f) }
     val animatedLogoAlpha by animateFloatAsState(
         animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
@@ -76,8 +73,6 @@ fun SplashScreen(
 
     LaunchedEffect(key1 = Unit) {
         logoAlpha = 1f
-        delay(1000)
-        homeNavigate()
     }
 }
 

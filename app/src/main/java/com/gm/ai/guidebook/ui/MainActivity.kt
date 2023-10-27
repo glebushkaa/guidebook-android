@@ -34,12 +34,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.navigation.GuideNavHost
 import com.gm.ai.guidebook.ui.navigation.components.GuideBottomNavigation
+import com.gm.ai.guidebook.ui.navigation.route.LoginScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
@@ -76,7 +78,7 @@ class MainActivity : ComponentActivity() {
             initialValue = null,
         )
         val areBarsVisible by remember {
-            derivedStateOf { currentEntry != null && currentEntry?.destination?.route != SplashScreenRoute.route }
+            derivedStateOf { checkAreBarsVisible(currentEntry) }
         }
 
         GuideBookTheme(
@@ -131,6 +133,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun checkAreBarsVisible(
+        currentEntry: NavBackStackEntry?,
+    ): Boolean {
+        return currentEntry != null &&
+            currentEntry.destination.route != SplashScreenRoute.route &&
+            currentEntry.destination.route != LoginScreenRoute.route
     }
 
     @Composable

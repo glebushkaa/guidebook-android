@@ -1,4 +1,4 @@
-package com.gm.ai.guidebook.domain
+package com.gm.ai.guidebook.domain.datastore
 
 import kotlinx.coroutines.flow.Flow
 

@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -38,6 +40,7 @@ fun GuidesList(
     modifier: Modifier = Modifier,
     list: List<Guide> = emptyList(),
     guideClicked: (String) -> Unit = {},
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val topItemShape = GuideTheme.shape.medium.copy(
         bottomEnd = CornerSize(0.dp),
@@ -51,6 +54,7 @@ fun GuidesList(
     LazyColumn(
         modifier = modifier.animateContentSize(),
         verticalArrangement = Arrangement.spacedBy(GuideTheme.offset.min),
+        state = lazyListState,
     ) {
         items(
             items = list,

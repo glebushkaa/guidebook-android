@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.gm.ai.guidebook.data.datastore.SettingsDataStoreImpl
-import com.gm.ai.guidebook.domain.SettingsDataStore
+import com.gm.ai.guidebook.data.datastore.AuthDataStoreImpl
+import com.gm.ai.guidebook.domain.datastore.SettingsDataStore
+import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +28,9 @@ object PreferencesModule {
     private const val SETTINGS_DATA_STORE = "settings_datastore"
     private const val SETTINGS_DATA_STORE_NAME = "settings_datastore_name"
 
+    private const val USER_DATA_STORE = "user_datastore"
+    private const val USER_DATA_STORE_NAME = "user_datastore_name"
+
     @Provides
     @Singleton
     @Named(SETTINGS_DATA_STORE)
@@ -43,5 +48,24 @@ object PreferencesModule {
         @Named(SETTINGS_DATA_STORE) dataStore: DataStore<Preferences>,
     ): SettingsDataStore {
         return SettingsDataStoreImpl(dataStore)
+    }
+
+    @Provides
+    @Singleton
+    @Named(USER_DATA_STORE)
+    fun provideUserPreferences(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            produceFile = { context.preferencesDataStoreFile(USER_DATA_STORE_NAME) },
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDataStore(
+        @Named(USER_DATA_STORE) dataStore: DataStore<Preferences>,
+    ): AuthDataStore {
+        return AuthDataStoreImpl(dataStore)
     }
 }

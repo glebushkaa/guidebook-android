@@ -1,6 +1,6 @@
 package com.gm.ai.guidebook.domain.usecase.settings
 
-import com.gm.ai.guidebook.domain.SettingsDataStore
+import com.gm.ai.guidebook.domain.datastore.SettingsDataStore
 import com.gm.ai.guidebook.domain.usecase.core.ResultNoneParamsUseCase
 import com.gm.ai.guidebook.domain.usecase.core.UseCaseLogger
 import kotlinx.coroutines.flow.Flow

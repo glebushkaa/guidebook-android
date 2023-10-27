@@ -1,6 +1,8 @@
 package com.gm.ai.guidebook.di
 
+import com.gm.ai.guidebook.data.repository.AuthRepositoryImpl
 import com.gm.ai.guidebook.data.repository.GuideRepositoryImpl
+import com.gm.ai.guidebook.domain.repository.AuthRepository
 import com.gm.ai.guidebook.domain.repository.GuideRepository
 import dagger.Binds
 import dagger.Module
@@ -19,4 +21,8 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindGuideRepository(guideRepositoryImpl: GuideRepositoryImpl): GuideRepository
+
+    @Binds
+    @Singleton
+    fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
 }

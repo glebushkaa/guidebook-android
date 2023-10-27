@@ -2,11 +2,13 @@ package com.gm.ai.guidebook.ui.screen.settings
 
 import com.gm.ai.guidebook.core.android.BaseViewModel
 import com.gm.ai.guidebook.core.android.stateReducerFlow
+import com.gm.ai.guidebook.domain.usecase.auth.LogOutUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.CollectDarkModeUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.UpdateDarkModeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,12 +21,15 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val updateDarkModeUseCase: UpdateDarkModeUseCase,
     private val collectDarkModeUseCase: CollectDarkModeUseCase,
+    private val logOutUseCase: LogOutUseCase,
 ) : BaseViewModel() {
 
     val state = stateReducerFlow(
         initialState = SettingsState(),
         reduceState = ::handleEvent,
     )
+    val navigationEffect = Channel<SettingsNavigationEffect>()
+
     private var systemInDarkModeByDefault = false
     private var darkModeJob: Job? = null
 
@@ -41,7 +46,10 @@ class SettingsViewModel @Inject constructor(
         updateDarkModeUseCase(params)
     }
 
-    private fun handleEvent(currentState: SettingsState, event: SettingsEvent): SettingsState {
+    private suspend fun handleEvent(
+        currentState: SettingsState,
+        event: SettingsEvent,
+    ): SettingsState {
         event.handle(
             sendSystemDarkModeSetting = { isSystemInDarkModeByDefault ->
                 darkModeJob?.cancel()
@@ -54,6 +62,11 @@ class SettingsViewModel @Inject constructor(
             },
             sendNotificationsSettingUpdate = {
                 return currentState.copy(notificationsChecked = it)
+            },
+            logOutClicked = {
+                logOutUseCase()
+                val effect = SettingsNavigationEffect.NavigateLogin
+                navigationEffect.trySend(effect)
             },
         )
         return currentState

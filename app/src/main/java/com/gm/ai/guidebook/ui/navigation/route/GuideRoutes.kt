@@ -34,3 +34,7 @@ object SettingsScreenRoute : BottomNavGuideRoute {
     override val titleResId: Int = R.string.settings
     override val iconResId: Int = R.drawable.ic_settings
 }
+
+object LoginScreenRoute : GuideRoute {
+    override val route: String = "login"
+}
