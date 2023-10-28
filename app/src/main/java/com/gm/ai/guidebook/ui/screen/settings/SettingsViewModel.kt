@@ -2,6 +2,7 @@ package com.gm.ai.guidebook.ui.screen.settings
 
 import com.gm.ai.guidebook.core.android.BaseViewModel
 import com.gm.ai.guidebook.core.android.stateReducerFlow
+import com.gm.ai.guidebook.domain.usecase.auth.DeleteAccountUseCase
 import com.gm.ai.guidebook.domain.usecase.auth.LogOutUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.CollectDarkModeUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.UpdateDarkModeUseCase
@@ -22,6 +23,7 @@ class SettingsViewModel @Inject constructor(
     private val updateDarkModeUseCase: UpdateDarkModeUseCase,
     private val collectDarkModeUseCase: CollectDarkModeUseCase,
     private val logOutUseCase: LogOutUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : BaseViewModel() {
 
     val state = stateReducerFlow(
@@ -64,9 +66,16 @@ class SettingsViewModel @Inject constructor(
                 return currentState.copy(notificationsChecked = it)
             },
             logOutClicked = {
-                logOutUseCase()
-                val effect = SettingsNavigationEffect.NavigateLogin
-                navigationEffect.trySend(effect)
+                logOutUseCase().onSuccess {
+                    val effect = SettingsNavigationEffect.NavigateLogin
+                    navigationEffect.trySend(effect)
+                }
+            },
+            deleteAccountClicked = {
+                deleteAccountUseCase().onSuccess {
+                    val effect = SettingsNavigationEffect.NavigateLogin
+                    navigationEffect.trySend(effect)
+                }
             },
         )
         return currentState

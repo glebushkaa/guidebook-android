@@ -105,6 +105,20 @@ fun SettingsScreen(
                 sendEvent(event)
             },
         )
+        Text(
+            modifier = Modifier
+                .padding(
+                    top = GuideTheme.offset.regular,
+                    start = GuideTheme.offset.regular,
+                )
+                .clickableWithoutRipple {
+                    val event = SettingsEvent.DeleteAccountClicked
+                    sendEvent(event)
+                },
+            text = "Delete account",
+            style = GuideTheme.typography.titleMedium,
+            color = GuideTheme.palette.error,
+        )
     }
 
     LaunchedEffect(key1 = Unit) {

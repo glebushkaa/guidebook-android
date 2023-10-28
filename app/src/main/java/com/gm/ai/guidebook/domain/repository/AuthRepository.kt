@@ -9,6 +9,7 @@ import com.gm.ai.guidebook.model.User
 interface AuthRepository {
 
     /**
+     *@throws AuthException
      * @return access token
      */
     suspend fun login(
@@ -17,6 +18,7 @@ interface AuthRepository {
     ): String
 
     /**
+     * @throws AuthException
      * @return access token
      */
     suspend fun register(
@@ -25,5 +27,14 @@ interface AuthRepository {
         password: String,
     ): String
 
+    /**
+     * @throws AuthException
+     * @return user
+     */
     suspend fun getUser(): User
+
+    /**
+     * @throws AuthException
+     */
+    suspend fun deleteAccount()
 }

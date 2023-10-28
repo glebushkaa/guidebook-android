@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -21,6 +22,12 @@ class AuthDataStoreImpl @Inject constructor(
         get() = dataStore.data.map {
             it[stringPreferencesKey(USER_ACCESS_TOKEN)]
         }
+
+    override suspend fun getAccessToken(): String? {
+        val preferencesKey = stringPreferencesKey(USER_ACCESS_TOKEN)
+        val preferences = dataStore.data.first()
+        return preferences[preferencesKey]
+    }
 
     override suspend fun updateAccessToken(token: String) {
         dataStore.edit {

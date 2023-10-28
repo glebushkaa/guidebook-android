@@ -5,6 +5,7 @@ package com.gm.ai.guidebook.ui.screen.settings
  */
 
 sealed class SettingsEvent {
+    data object DeleteAccountClicked : SettingsEvent()
     data object LogOutClicked : SettingsEvent()
 
     data class SendNotificationsSettingUpdate(
@@ -22,6 +23,7 @@ sealed class SettingsEvent {
         sendSystemDarkModeSetting: (Boolean) -> Unit = {},
         sendNotificationsSettingUpdate: (Boolean) -> Unit = {},
         logOutClicked: () -> Unit = {},
+        deleteAccountClicked: () -> Unit = {},
     ) {
         when (this) {
             AlterDarkMode -> alterDarkMode()
@@ -29,6 +31,7 @@ sealed class SettingsEvent {
             is SendSystemDarkModeSetting -> sendSystemDarkModeSetting(darkMode)
             is SendNotificationsSettingUpdate -> sendNotificationsSettingUpdate(notificationsEnabled)
             LogOutClicked -> logOutClicked()
+            DeleteAccountClicked -> deleteAccountClicked()
         }
     }
 }

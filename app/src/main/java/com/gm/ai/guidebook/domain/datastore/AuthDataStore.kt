@@ -10,6 +10,8 @@ interface AuthDataStore {
 
     val accessToken: Flow<String?>
 
+    suspend fun getAccessToken(): String?
+
     suspend fun updateAccessToken(token: String)
 
     suspend fun removeAccessToken()

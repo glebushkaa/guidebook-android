@@ -8,7 +8,6 @@ import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import com.gm.ai.guidebook.domain.exception.AuthException
 import com.gm.ai.guidebook.domain.repository.AuthRepository
 import com.gm.ai.guidebook.model.User
-import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 /**
@@ -52,17 +51,11 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUser(): User {
-        val accessToken = authDataStore.accessToken.firstOrNull() ?: run {
-            val exception = AuthException(
-                code = NO_TOKEN_EXCEPTION,
-                message = "No token found",
-            )
-            throw exception
-        }
+        val accessToken = getAccessToken()
         val response = authApi.getUser(accessToken)
         if (response.message?.isNotEmpty() == true) {
             val exception = AuthException(
-                code = REGISTER_EXCEPTION,
+                code = GET_USER_EXCEPTION,
                 message = response.message,
             )
             throw exception
@@ -70,9 +63,33 @@ class AuthRepositoryImpl @Inject constructor(
         return response.toUser()
     }
 
+    override suspend fun deleteAccount() {
+        val accessToken = getAccessToken()
+        val response = authApi.deleteAccount(accessToken)
+        if (response.code?.isNotEmpty() == true && response.message?.isNotEmpty() == true) {
+            val exception = AuthException(
+                code = DELETE_ACCOUNT_EXCEPTION,
+                message = response.message,
+            )
+            throw exception
+        }
+    }
+
+    private suspend fun getAccessToken(): String {
+        return authDataStore.getAccessToken() ?: run {
+            val exception = AuthException(
+                code = NO_TOKEN_EXCEPTION,
+                message = "No token",
+            )
+            throw exception
+        }
+    }
+
     private companion object {
         const val LOGIN_EXCEPTION = 100
         const val REGISTER_EXCEPTION = 200
+        const val GET_USER_EXCEPTION = 300
+        const val DELETE_ACCOUNT_EXCEPTION = -180
         const val NO_TOKEN_EXCEPTION = -199
     }
 }
