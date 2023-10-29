@@ -1,5 +1,7 @@
 package com.gm.ai.guidebook.ui.navigation.route
 
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.gm.ai.guidebook.R
 
 /**
@@ -21,6 +23,12 @@ object HomeScreenRoute : BottomNavGuideRoute {
 
 object DetailsScreenRoute : GuideRoute {
     override val route: String = "details"
+    val routeWithArgs: String = "$route/{guideId}"
+    val arguments = listOf(
+        navArgument("guideId") { type = NavType.StringType },
+    )
+
+    fun makeDetailsScreenRoute(id: String) = "$route/$id"
 }
 
 object FavoritesScreenRoute : BottomNavGuideRoute {

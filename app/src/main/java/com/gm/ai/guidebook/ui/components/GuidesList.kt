@@ -106,7 +106,7 @@ private fun GuideItem(
         Text(
             modifier = Modifier.layoutId(GUIDE_ITEM_IMAGE),
             text = guide.emoji,
-            fontSize = 40.sp,
+            fontSize = 32.sp,
         )
         Text(
             modifier = Modifier.layoutId(GUIDE_ITEM_TITLE),

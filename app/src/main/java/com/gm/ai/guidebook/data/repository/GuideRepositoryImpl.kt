@@ -1,12 +1,13 @@
 package com.gm.ai.guidebook.data.repository
 
 import com.gm.ai.guidebook.data.mapper.toGuide
+import com.gm.ai.guidebook.data.mapper.toGuideDetails
 import com.gm.ai.guidebook.data.network.GuidesApi
 import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import com.gm.ai.guidebook.domain.exception.AuthException
 import com.gm.ai.guidebook.domain.repository.GuideRepository
 import com.gm.ai.guidebook.model.Guide
-import kotlinx.coroutines.flow.firstOrNull
+import com.gm.ai.guidebook.model.GuideDetails
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,17 +22,28 @@ class GuideRepositoryImpl @Inject constructor(
 ) : GuideRepository {
 
     override suspend fun searchGuides(query: String): List<Guide> {
-        val accessToken = authDataStore.accessToken.firstOrNull() ?: run {
+        return guidesApi.searchGuides(
+            token = getAccessToken(),
+            query = query,
+        ).map { it.toGuide() }
+    }
+
+    override suspend fun getGuideDetails(id: String): GuideDetails {
+        val accessToken = getAccessToken()
+        return guidesApi.getGuideDetails(
+            token = accessToken,
+            id = id,
+        ).toGuideDetails()
+    }
+
+    private suspend fun getAccessToken(): String {
+        return authDataStore.getAccessToken() ?: run {
             val exception = AuthException(
                 code = NO_TOKEN_EXCEPTION,
                 message = "No token found",
             )
             throw exception
         }
-        return guidesApi.searchGuides(
-            token = accessToken,
-            query = query,
-        ).map { it.toGuide() }
     }
 
     private companion object {

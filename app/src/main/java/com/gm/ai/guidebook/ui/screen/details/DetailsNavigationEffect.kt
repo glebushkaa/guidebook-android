@@ -1,4 +1,4 @@
-package com.gm.ai.guidebook.ui.screen.info
+package com.gm.ai.guidebook.ui.screen.details
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023

@@ -1,6 +1,5 @@
-package com.gm.ai.guidebook.ui.screen.info
+package com.gm.ai.guidebook.ui.screen.details
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,7 +25,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
+import coil.compose.AsyncImage
 import com.gm.ai.guidebook.R
+import com.gm.ai.guidebook.model.GuideDetails
 import com.gm.ai.guidebook.ui.components.BackButton
 import com.gm.ai.guidebook.ui.components.GuideIconButton
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
@@ -41,14 +43,27 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme
 @Preview
 @Composable
 fun DetailsScreenPreview() {
+    val details = GuideDetails(
+        id = "1",
+        title = "C++",
+        emoji = "👨‍💻",
+        description = "C++ is object oriented programming language",
+        imageUrl = "",
+        authorId = "",
+        authorName = "gle.bushkaa",
+        favorite = false,
+    )
+    val state = DetailsState(
+        guide = details,
+    )
     GuideBookTheme(darkTheme = false) {
-        DetailsScreen()
+        DetailsScreen(state = state)
     }
 }
 
 @Composable
 fun DetailsScreen(
-    state: DetailsState = DetailsState(),
+    state: DetailsState,
     onEvent: (DetailsEvent) -> Unit = {},
 ) {
     val onBackgroundColor = GuideTheme.palette.onBackground
@@ -77,9 +92,10 @@ fun DetailsScreen(
             style = GuideTheme.typography.titleSmall,
             color = GuideTheme.palette.onBackground,
         )
-        Image(
+        AsyncImage(
             modifier = Modifier.layoutId(DETAILS_IMAGE),
-            painter = painterResource(id = R.drawable.img_book),
+            contentScale = ContentScale.Crop,
+            model = state.guide.imageUrl,
             contentDescription = null,
         )
         Icon(
@@ -95,7 +111,7 @@ fun DetailsScreen(
         )
         Text(
             modifier = Modifier.layoutId(AUTHOR_TEXT),
-            text = "gle.bushkaa",
+            text = state.guide.authorName,
             style = GuideTheme.typography.bodyMedium,
             color = GuideTheme.palette.onBackground,
             maxLines = 1,
@@ -103,7 +119,7 @@ fun DetailsScreen(
         )
         GuideIconButton(
             modifier = Modifier.layoutId(LIKE_BUTTON),
-            iconResId = if (true) {
+            iconResId = if (state.guide.favorite) {
                 R.drawable.ic_filled_like
             } else {
                 R.drawable.ic_like
@@ -112,7 +128,7 @@ fun DetailsScreen(
         )
         Text(
             modifier = Modifier.layoutId(TOPIC_TITLE_TEXT),
-            text = "Topic",
+            text = state.guide.title,
             style = GuideTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold,
             ),
@@ -137,9 +153,7 @@ fun DetailsScreen(
             modifier = Modifier
                 .padding(bottom = GuideTheme.offset.gigantic)
                 .layoutId(DESCRIPTION_TOPIC_TEXT),
-            text = "C++ (/ˈsiː plʌs plʌs/, pronounced \"C plus plus\" and sometimes abbreviated as CPP) is a high-level, general-purpose programming language created by Danish computer scientist Bjarne Stroustrup. First released in 1985 as an extension of the C programming language, it has since expanded significantly over time; as of 1997 C++ has object-oriented, generic, and functional features, in addition to facilities for low-level memory manipulation. It is almost always implemented as a compiled language, and many vendors provide C++ compilers, including the Free Software Foundation, LLVM, Microsoft, Intel, Embarcadero, Oracle, and IBM.[13]\n" +
-                "\n" +
-                "C++ was designed with systems programming and embedded, resource-constrained software and large systems in mind, with performance, efficiency, and flexibility of use as its design highlights.[14] C++ has also been found useful in many other contexts, with key strengths being software infrastructure and resource-constrained applications,[14] including desktop applications, video games, servers (e.g. e-commerce, web search, or databases), and performance-critical applications (e.g. telephone switches or space probes).[15]",
+            text = state.guide.description,
             style = GuideTheme.typography.bodyMedium,
             color = GuideTheme.palette.onBackground,
         )

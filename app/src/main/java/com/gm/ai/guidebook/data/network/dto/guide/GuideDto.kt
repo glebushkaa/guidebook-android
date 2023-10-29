@@ -1,4 +1,4 @@
-package com.gm.ai.guidebook.data.network.dto
+package com.gm.ai.guidebook.data.network.dto.guide
 
 import com.google.gson.annotations.SerializedName
 

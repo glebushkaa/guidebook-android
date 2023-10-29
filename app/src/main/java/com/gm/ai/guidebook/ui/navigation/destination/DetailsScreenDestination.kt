@@ -10,11 +10,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.gm.ai.guidebook.core.common.EIGHT_HUNDRED_MILLIS
 import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.navigation.route.DetailsScreenRoute
-import com.gm.ai.guidebook.ui.screen.info.DetailsScreen
-import com.gm.ai.guidebook.ui.screen.info.DetailsViewModel
+import com.gm.ai.guidebook.ui.screen.details.DetailsScreen
+import com.gm.ai.guidebook.ui.screen.details.DetailsViewModel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
@@ -27,7 +26,8 @@ fun NavGraphBuilder.detailsScreenDestination(
     navigateBack: () -> Unit = {},
 ) {
     composable(
-        route = DetailsScreenRoute.route,
+        route = DetailsScreenRoute.routeWithArgs,
+        arguments = DetailsScreenRoute.arguments,
         enterTransition = {
             slideInHorizontally(animationSpec = animSpec, initialOffsetX = { it * 2 })
         },

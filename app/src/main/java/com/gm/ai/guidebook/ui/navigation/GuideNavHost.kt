@@ -47,9 +47,8 @@ fun GuideNavHost(
             },
         )
         homeScreenDestination {
-            controller.navigateSingleTopTo(
-                route = DetailsScreenRoute.route,
-            )
+            val route = DetailsScreenRoute.makeDetailsScreenRoute(id = it)
+            controller.navigate(route = route)
         }
         favoritesScreenDestination {
             controller.navigateSingleTopTo(

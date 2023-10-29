@@ -1,6 +1,6 @@
 package com.gm.ai.guidebook.data.mapper
 
-import com.gm.ai.guidebook.data.network.dto.GuideDto
+import com.gm.ai.guidebook.data.network.dto.guide.GuideDto
 import com.gm.ai.guidebook.model.Guide
 
 /**

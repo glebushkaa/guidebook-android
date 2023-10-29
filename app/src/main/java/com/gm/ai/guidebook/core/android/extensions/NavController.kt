@@ -19,8 +19,12 @@ fun NavController.navigatePopUpInclusive(
     }
 }
 
-fun NavController.navigateSingleTopTo(route: String) {
-    navigate(route) {
+fun NavController.navigateSingleTopTo(
+    route: String,
+) {
+    navigate(
+        route = route,
+    ) {
         popUpTo(
             this@navigateSingleTopTo.graph.findStartDestination().id,
         ) {
