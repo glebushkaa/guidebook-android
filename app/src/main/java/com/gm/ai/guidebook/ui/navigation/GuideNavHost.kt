@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
-import com.gm.ai.guidebook.core.android.extensions.navigateSingleTopTo
 import com.gm.ai.guidebook.ui.navigation.destination.detailsScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.favoritesScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.homeScreenDestination
@@ -46,14 +45,13 @@ fun GuideNavHost(
                 )
             },
         )
-        homeScreenDestination {
-            val route = DetailsScreenRoute.makeDetailsScreenRoute(id = it)
+        homeScreenDestination { id ->
+            val route = DetailsScreenRoute.makeDetailsScreenRoute(id = id)
             controller.navigate(route = route)
         }
-        favoritesScreenDestination {
-            controller.navigateSingleTopTo(
-                route = DetailsScreenRoute.route,
-            )
+        favoritesScreenDestination { id ->
+            val route = DetailsScreenRoute.makeDetailsScreenRoute(id = id)
+            controller.navigate(route = route)
         }
         detailsScreenDestination {
             controller.popBackStack()

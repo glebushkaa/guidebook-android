@@ -2,11 +2,10 @@ package com.gm.ai.guidebook.ui.screen.favorites
 
 import com.gm.ai.guidebook.core.android.BaseViewModel
 import com.gm.ai.guidebook.core.android.stateReducerFlow
-import com.gm.ai.guidebook.model.Guide
+import com.gm.ai.guidebook.domain.usecase.favorite.GetFavoritesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,7 +14,9 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class FavoritesViewModel @Inject constructor() : BaseViewModel() {
+class FavoritesViewModel @Inject constructor(
+    private val getFavoritesUseCase: GetFavoritesUseCase,
+) : BaseViewModel() {
 
     val state = stateReducerFlow(
         initialState = FavoritesState(),
@@ -23,23 +24,9 @@ class FavoritesViewModel @Inject constructor() : BaseViewModel() {
     )
     val navigationEffect = Channel<FavoritesNavigationEffect>()
 
-    private val list = listOf<Guide>()
-
-    init {
-        viewModelScope.launch {
-            delay(1000)
-            updateGuidesList()
-        }
-    }
-
-    private fun updateGuidesList() = viewModelScope.launch(Dispatchers.IO) {
-        val event = FavoritesEvent.UpdateGuidesList(list)
-        state.handleEvent(event)
-    }
-
-    private fun filterBySearchQuery(searchQuery: String) = viewModelScope.launch(Dispatchers.IO) {
-        val list = list.filter { it.title.contains(searchQuery, ignoreCase = true) }
-        val event = FavoritesEvent.UpdateGuidesList(list)
+    private fun fetchFavorites() = viewModelScope.launch(Dispatchers.IO) {
+        val favorites = getFavoritesUseCase().getOrNull() ?: emptyList()
+        val event = FavoritesEvent.UpdateGuidesList(favorites)
         state.handleEvent(event)
     }
 
@@ -48,14 +35,14 @@ class FavoritesViewModel @Inject constructor() : BaseViewModel() {
             updateGuidesList = { list ->
                 return currentState.copy(guides = list)
             },
-            sendSearchQuery = { query ->
-                filterBySearchQuery(query)
-                return currentState.copy(searchQuery = query)
-            },
             navigateToDetailsScreen = { guideId ->
                 val navEffect = FavoritesNavigationEffect.NavigateDetailsScreen(guideId)
                 navigationEffect.trySend(navEffect)
             },
+            sendSearchQuery = { query ->
+                return currentState.copy(searchQuery = query)
+            },
+            askFavorites = { fetchFavorites() },
         )
         return currentState
     }

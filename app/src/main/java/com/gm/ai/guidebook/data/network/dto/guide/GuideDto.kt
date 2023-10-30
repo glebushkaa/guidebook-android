@@ -11,6 +11,4 @@ data class GuideDto(
     @SerializedName("emoji") val emoji: String? = null,
     @SerializedName("title") val title: String? = null,
     @SerializedName("description") val description: String? = null,
-    @SerializedName("image") val imageUrl: String? = null,
-    @SerializedName("authorId") val authorId: String? = null,
 )

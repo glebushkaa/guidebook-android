@@ -64,7 +64,7 @@ fun SettingsScreen(
 
     LaunchedEffect(key1 = Unit) {
         listOf(
-            SettingsEvent.GetUser,
+//            SettingsEvent.GetUser,
             SettingsEvent.SendSystemDarkModeSetting(isSystemInDarkMode),
         ).forEach {
             sendEvent(it)

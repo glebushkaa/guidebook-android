@@ -124,7 +124,7 @@ fun DetailsScreen(
             } else {
                 R.drawable.ic_like
             },
-            onClick = {},
+            onClick = { onEvent(DetailsEvent.LikeClicked) },
         )
         Text(
             modifier = Modifier.layoutId(TOPIC_TITLE_TEXT),

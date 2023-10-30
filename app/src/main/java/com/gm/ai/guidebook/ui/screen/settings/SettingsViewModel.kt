@@ -40,6 +40,10 @@ class SettingsViewModel @Inject constructor(
     private var systemInDarkModeByDefault = false
     private var darkModeJob: Job? = null
 
+    init {
+        getUser()
+    }
+
     private fun collectDarkMode() = viewModelScope.launch(Dispatchers.IO) {
         collectDarkModeUseCase().getOrNull()?.collectLatest {
             val darkMode = it ?: systemInDarkModeByDefault
@@ -95,7 +99,9 @@ class SettingsViewModel @Inject constructor(
             updateUser = { user ->
                 return currentState.copy(user = user)
             },
-            getUser = { getUser() },
+            getUser = {
+//                getUser()
+            },
         )
         return currentState
     }

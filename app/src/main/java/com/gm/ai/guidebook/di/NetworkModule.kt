@@ -1,6 +1,7 @@
 package com.gm.ai.guidebook.di
 
 import com.gm.ai.guidebook.data.network.AuthApi
+import com.gm.ai.guidebook.data.network.FavoritesApi
 import com.gm.ai.guidebook.data.network.GuidesApi
 import dagger.Module
 import dagger.Provides
@@ -39,5 +40,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoritesApi(retrofit: Retrofit): FavoritesApi {
+        return retrofit.create(FavoritesApi::class.java)
     }
 }

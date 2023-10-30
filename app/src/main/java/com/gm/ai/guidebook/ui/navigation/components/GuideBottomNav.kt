@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
-import com.gm.ai.guidebook.core.android.extensions.navigateSingleTopTo
+import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
 import com.gm.ai.guidebook.ui.navigation.route.BottomNavGuideRoute
 import com.gm.ai.guidebook.ui.navigation.route.FavoritesScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.HomeScreenRoute
@@ -71,7 +71,11 @@ fun GuideBottomNavigation(
                 selected = selectedItem?.route == route.route,
                 onClick = {
                     if (route.route == currentDestination?.route) return@GuideBottomNavItem
-                    navController.navigateSingleTopTo(route = route.route)
+                    val currentRoute = currentDestination?.route ?: return@GuideBottomNavItem
+                    navController.navigatePopUpInclusive(
+                        route = route.route,
+                        popUpRoute = currentRoute,
+                    )
                 },
             )
         }

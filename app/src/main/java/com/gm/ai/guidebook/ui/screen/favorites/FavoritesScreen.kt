@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,6 +38,21 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme
 
 @Composable
 fun FavoritesScreen(
+    state: FavoritesState = FavoritesState(),
+    onEvent: (FavoritesEvent) -> Unit = {},
+) {
+    LaunchedEffect(key1 = Unit) {
+        onEvent(FavoritesEvent.AskFavorites)
+    }
+
+    FavoritesScreenContent(
+        state = state,
+        onEvent = onEvent,
+    )
+}
+
+@Composable
+private fun FavoritesScreenContent(
     state: FavoritesState = FavoritesState(),
     onEvent: (FavoritesEvent) -> Unit = {},
 ) {

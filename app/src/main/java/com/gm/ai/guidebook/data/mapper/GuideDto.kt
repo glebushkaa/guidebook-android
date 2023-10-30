@@ -13,7 +13,5 @@ fun GuideDto.toGuide(): Guide {
         title = title ?: "",
         emoji = emoji ?: "",
         description = description ?: "",
-        imageUrl = imageUrl ?: "",
-        authorId = authorId ?: "",
     )
 }

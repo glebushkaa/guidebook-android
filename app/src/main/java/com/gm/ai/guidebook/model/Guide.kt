@@ -9,6 +9,4 @@ data class Guide(
     val title: String,
     val emoji: String,
     val description: String,
-    val imageUrl: String,
-    val authorId: String,
 )
