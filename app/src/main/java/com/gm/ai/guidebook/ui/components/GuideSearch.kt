@@ -64,6 +64,7 @@ fun GuideSearch(
             unfocusedTextColor = GuideTheme.palette.onSurface,
             focusedContainerColor = GuideTheme.palette.surface,
             unfocusedContainerColor = GuideTheme.palette.surface,
+            focusedIndicatorColor = GuideTheme.palette.primary,
         ),
         shape = GuideTheme.shape.huge,
     )

@@ -24,8 +24,11 @@ class FavoritesViewModel @Inject constructor(
     )
     val navigationEffect = Channel<FavoritesNavigationEffect>()
 
-    private fun fetchFavorites() = viewModelScope.launch(Dispatchers.IO) {
-        val favorites = getFavoritesUseCase().getOrNull() ?: emptyList()
+    private fun searchFavorites(
+        query: String = state.value.searchQuery,
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        val params = GetFavoritesUseCase.Params(query = query)
+        val favorites = getFavoritesUseCase(params).getOrNull() ?: emptyList()
         val event = FavoritesEvent.UpdateGuidesList(favorites)
         state.handleEvent(event)
     }
@@ -40,9 +43,10 @@ class FavoritesViewModel @Inject constructor(
                 navigationEffect.trySend(navEffect)
             },
             sendSearchQuery = { query ->
+                searchFavorites(query = query)
                 return currentState.copy(searchQuery = query)
             },
-            askFavorites = { fetchFavorites() },
+            askFavorites = { searchFavorites() },
         )
         return currentState
     }

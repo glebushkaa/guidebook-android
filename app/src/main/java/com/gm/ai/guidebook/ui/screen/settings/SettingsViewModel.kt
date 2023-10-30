@@ -30,9 +30,7 @@ class SettingsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val state = stateReducerFlow(
-        initialState = SettingsState(
-            user = emptyUser(),
-        ),
+        initialState = SettingsState(user = emptyUser()),
         reduceState = ::handleEvent,
     )
     val navigationEffect = Channel<SettingsNavigationEffect>()
@@ -81,28 +79,40 @@ class SettingsViewModel @Inject constructor(
         currentState: SettingsState,
         event: SettingsEvent,
     ): SettingsState {
-        event.handle(
-            sendSystemDarkModeSetting = { isSystemInDarkModeByDefault ->
+        when (event) {
+            SettingsEvent.AlterDarkMode -> updateDarkMode()
+            is SettingsEvent.UpdateDarkModeSetting -> {
+                return currentState.copy(darkModeEnabled = event.darkMode)
+            }
+
+            is SettingsEvent.SendSystemDarkModeSetting -> {
                 darkModeJob?.cancel()
-                systemInDarkModeByDefault = isSystemInDarkModeByDefault
+                systemInDarkModeByDefault = event.darkMode
                 darkModeJob = collectDarkMode()
-            },
-            alterDarkMode = ::updateDarkMode,
-            updateDarkModeSelector = { darkMode ->
-                return currentState.copy(darkModeEnabled = darkMode)
-            },
-            sendNotificationsSettingUpdate = {
-                return currentState.copy(notificationsChecked = it)
-            },
-            logOutClicked = { logOut() },
-            deleteAccountClicked = { deleteAccount() },
-            updateUser = { user ->
-                return currentState.copy(user = user)
-            },
-            getUser = {
-//                getUser()
-            },
-        )
+            }
+
+            is SettingsEvent.SendNotificationsSettingUpdate -> {
+                return currentState.copy(notificationsChecked = event.notificationsEnabled)
+            }
+
+            SettingsEvent.LogOutConfirmed -> logOut()
+            SettingsEvent.DeleteAccountConfirmed -> deleteAccount()
+            is SettingsEvent.UpdateUser -> {
+                return currentState.copy(user = event.user)
+            }
+
+            SettingsEvent.HideDialogs -> {
+                return currentState.copy(visibleDialog = null)
+            }
+
+            SettingsEvent.ShowDeleteAccountDialog -> {
+                return currentState.copy(visibleDialog = SettingDialogs.DELETE)
+            }
+
+            SettingsEvent.ShowLogOutAccountDialog -> {
+                return currentState.copy(visibleDialog = SettingDialogs.LOG_OUT)
+            }
+        }
         return currentState
     }
 }

@@ -1,5 +1,6 @@
 package com.gm.ai.guidebook.ui.screen.settings
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
 import com.gm.ai.guidebook.model.User
+import com.gm.ai.guidebook.ui.dialogs.ConfirmationDialog
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
@@ -63,12 +67,42 @@ fun SettingsScreen(
     val isSystemInDarkMode = isSystemInDarkTheme()
 
     LaunchedEffect(key1 = Unit) {
-        listOf(
-//            SettingsEvent.GetUser,
-            SettingsEvent.SendSystemDarkModeSetting(isSystemInDarkMode),
-        ).forEach {
-            sendEvent(it)
-        }
+        val event = SettingsEvent.SendSystemDarkModeSetting(isSystemInDarkMode)
+        sendEvent(event)
+    }
+
+    if (state.visibleDialog == SettingDialogs.DELETE) {
+        ConfirmationDialog(
+            title = "Delete account",
+            description = "Are you sure you want to delete your account?",
+            onConfirm = {
+                listOf(
+                    SettingsEvent.HideDialogs,
+                    SettingsEvent.DeleteAccountConfirmed
+                ).forEach(sendEvent)
+            },
+            onCancel = {
+                val event = SettingsEvent.HideDialogs
+                sendEvent(event)
+            },
+        )
+    }
+
+    if (state.visibleDialog == SettingDialogs.LOG_OUT) {
+        ConfirmationDialog(
+            title = "Log out",
+            description = "Are you sure you want to log out?",
+            onConfirm = {
+                listOf(
+                    SettingsEvent.HideDialogs,
+                    SettingsEvent.LogOutConfirmed
+                ).forEach(sendEvent)
+            },
+            onCancel = {
+                val event = SettingsEvent.HideDialogs
+                sendEvent(event)
+            },
+        )
     }
 
     SettingsScreenContent(
@@ -146,7 +180,7 @@ fun SettingsScreenContent(
                 top = GuideTheme.offset.regular,
             ),
             onClick = {
-                val event = SettingsEvent.LogOutClicked
+                val event = SettingsEvent.ShowLogOutAccountDialog
                 sendEvent(event)
             },
         )
@@ -157,7 +191,7 @@ fun SettingsScreenContent(
                     start = GuideTheme.offset.regular,
                 )
                 .clickableWithoutRipple {
-                    val event = SettingsEvent.DeleteAccountClicked
+                    val event = SettingsEvent.ShowDeleteAccountDialog
                     sendEvent(event)
                 },
             text = "Delete account",
@@ -240,6 +274,9 @@ private fun NotificationSection(
                 .align(Alignment.CenterEnd),
             checked = checked,
             onCheckedChange = onCheckedChange,
+            colors = SwitchDefaults.colors(
+                checkedTrackColor = GuideTheme.palette.primary,
+            )
         )
     }
 }

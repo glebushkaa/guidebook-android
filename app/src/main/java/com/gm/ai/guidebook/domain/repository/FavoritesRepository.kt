@@ -7,7 +7,7 @@ import com.gm.ai.guidebook.model.Guide
  */
 
 interface FavoritesRepository {
-    suspend fun getFavorites(): List<Guide>
+    suspend fun searchFavorites(query: String): List<Guide>
 
     suspend fun addFavorite(id: String)
 

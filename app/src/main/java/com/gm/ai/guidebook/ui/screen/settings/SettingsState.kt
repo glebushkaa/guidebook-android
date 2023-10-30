@@ -12,4 +12,5 @@ data class SettingsState(
     val darkModeEnabled: Boolean = false,
     val notificationsChecked: Boolean = false,
     val user: User,
+    val visibleDialog: SettingDialogs? = null
 )

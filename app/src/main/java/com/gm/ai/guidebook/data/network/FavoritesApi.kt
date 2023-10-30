@@ -6,15 +6,17 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/30/2023
  */
 
 interface FavoritesApi {
-    @GET("favorite/guides")
-    suspend fun getFavoriteGuides(
+    @GET("search/favorite/guides")
+    suspend fun searchFavoriteGuides(
         @Header("Authorization") token: String,
+        @Query("query") query: String = "",
     ): List<GuideDto>
 
     @PUT("favorite/guides/{id}")

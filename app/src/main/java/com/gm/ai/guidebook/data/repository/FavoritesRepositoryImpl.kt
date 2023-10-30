@@ -27,9 +27,10 @@ class FavoritesRepositoryImpl @Inject constructor(
         favoritesApi.deleteFavorite(token = accessToken, id = id)
     }
 
-    override suspend fun getFavorites(): List<Guide> {
-        return favoritesApi.getFavoriteGuides(
+    override suspend fun searchFavorites(query: String): List<Guide> {
+        return favoritesApi.searchFavoriteGuides(
             token = getAccessToken(),
+            query = query,
         ).map { it.toGuide() }
     }
 

@@ -105,6 +105,7 @@ fun LoginTextField(
             cursorColor = GuideTheme.palette.onSurface,
             focusedTextColor = GuideTheme.palette.onSurface,
             unfocusedTextColor = GuideTheme.palette.onSurface,
+            errorTextColor = GuideTheme.palette.onSurface,
             focusedContainerColor = GuideTheme.palette.surface,
             unfocusedContainerColor = GuideTheme.palette.surface,
             focusedIndicatorColor = GuideTheme.palette.primary,
