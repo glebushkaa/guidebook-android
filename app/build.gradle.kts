@@ -61,7 +61,7 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.material)
     implementation(libs.androidx.activity.compose)
-    
+
     implementation(libs.lifecycle.runtime.compose)
 
     implementation(libs.coil.compose)
@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.okhttp3)
     implementation(libs.gson)
+//    implementation(libs.httpclient)
 
     implementation(libs.glide)
 

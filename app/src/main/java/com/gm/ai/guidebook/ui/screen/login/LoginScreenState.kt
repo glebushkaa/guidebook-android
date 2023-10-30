@@ -10,4 +10,7 @@ data class LoginScreenState(
     val email: String = "",
     val password: String = "",
     val username: String = "",
+    val emailTextFieldError: String? = null,
+    val passwordTextFieldError: String? = null,
+    val usernameTextFieldError: String? = null,
 )

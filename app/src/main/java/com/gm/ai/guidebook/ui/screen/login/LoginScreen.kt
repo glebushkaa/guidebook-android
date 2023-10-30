@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.gm.ai.guidebook.ui.screen.login
 
 import androidx.compose.foundation.Image
@@ -17,7 +19,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -56,6 +61,8 @@ fun LoginScreen(
     state: LoginScreenState = LoginScreenState(),
     sendEvent: (LoginScreenEvent) -> Unit = {},
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     val titleText = when (state.loginMode) {
         LoginMode.SIGN_IN -> "Sign in"
         LoginMode.SIGN_UP -> "Sign up"
@@ -101,6 +108,8 @@ fun LoginScreen(
             LoginTextField(
                 value = state.username,
                 placeholder = "Username",
+                isError = state.usernameTextFieldError?.isNotEmpty() == true,
+                supportingText = state.usernameTextFieldError ?: "",
                 onValueChanged = {
                     val event = LoginScreenEvent.UpdateUsernameTextField(it)
                     sendEvent(event)
@@ -112,6 +121,8 @@ fun LoginScreen(
                 padding(top = GuideTheme.offset.medium)
             },
             value = state.email,
+            isError = state.emailTextFieldError?.isNotEmpty() == true,
+            supportingText = state.emailTextFieldError ?: "",
             placeholder = "Email",
             onValueChanged = {
                 val event = LoginScreenEvent.UpdateEmailTextField(it)
@@ -123,6 +134,8 @@ fun LoginScreen(
             modifier = Modifier.padding(top = GuideTheme.offset.medium),
             value = state.password,
             placeholder = "Password",
+            isError = state.passwordTextFieldError?.isNotEmpty() == true,
+            supportingText = state.passwordTextFieldError ?: "",
             onValueChanged = {
                 val event = LoginScreenEvent.UpdatePasswordTextField(it)
                 sendEvent(event)
@@ -134,13 +147,14 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
-            enabled = true,
+            enabled = state.loginButtonEnabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = GuideTheme.palette.primary,
-                disabledContainerColor = GuideTheme.palette.primary.copy(alpha = 0.6f),
+                disabledContainerColor = GuideTheme.palette.primary.copy(alpha = 0.2f),
             ),
             shape = GuideTheme.shape.small,
             onClick = {
+                focusManager.clearFocus()
                 val event = LoginScreenEvent.LoginClicked
                 sendEvent(event)
             },

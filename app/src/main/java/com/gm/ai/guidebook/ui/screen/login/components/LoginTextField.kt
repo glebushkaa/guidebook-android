@@ -31,6 +31,8 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme
 fun LoginTextField(
     modifier: Modifier = Modifier,
     value: String,
+    isError: Boolean = false,
+    supportingText: String = "",
     onValueChanged: (String) -> Unit = {},
     placeholder: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -52,6 +54,16 @@ fun LoginTextField(
             }
             onValueChanged(query)
         },
+        supportingText = {
+            Text(
+                text = supportingText,
+                style = GuideTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                ),
+                color = GuideTheme.palette.error,
+            )
+        },
+        isError = isError,
         visualTransformation = if (
             keyboardType != KeyboardType.Password ||
             textHidden
@@ -73,6 +85,7 @@ fun LoginTextField(
             )
         },
         trailingIcon = {
+            if (keyboardType != KeyboardType.Password) return@OutlinedTextField
             val imageResId = if (textHidden) {
                 R.drawable.ic_visibility_off
             } else {
@@ -94,6 +107,9 @@ fun LoginTextField(
             unfocusedTextColor = GuideTheme.palette.onSurface,
             focusedContainerColor = GuideTheme.palette.surface,
             unfocusedContainerColor = GuideTheme.palette.surface,
+            focusedIndicatorColor = GuideTheme.palette.primary,
+            errorIndicatorColor = GuideTheme.palette.error,
+            errorContainerColor = GuideTheme.palette.error.copy(alpha = 0.1f),
         ),
         shape = GuideTheme.shape.huge,
     )
