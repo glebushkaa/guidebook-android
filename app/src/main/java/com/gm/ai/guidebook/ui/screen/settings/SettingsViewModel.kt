@@ -3,9 +3,11 @@ package com.gm.ai.guidebook.ui.screen.settings
 import com.gm.ai.guidebook.core.android.BaseViewModel
 import com.gm.ai.guidebook.core.android.stateReducerFlow
 import com.gm.ai.guidebook.domain.usecase.auth.DeleteAccountUseCase
+import com.gm.ai.guidebook.domain.usecase.auth.GetUserUseCase
 import com.gm.ai.guidebook.domain.usecase.auth.LogOutUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.CollectDarkModeUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.UpdateDarkModeUseCase
+import com.gm.ai.guidebook.model.emptyUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,12 +24,15 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val updateDarkModeUseCase: UpdateDarkModeUseCase,
     private val collectDarkModeUseCase: CollectDarkModeUseCase,
-    private val logOutUseCase: LogOutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val logOutUseCase: LogOutUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : BaseViewModel() {
 
     val state = stateReducerFlow(
-        initialState = SettingsState(),
+        initialState = SettingsState(
+            user = emptyUser(),
+        ),
         reduceState = ::handleEvent,
     )
     val navigationEffect = Channel<SettingsNavigationEffect>()
@@ -48,7 +53,27 @@ class SettingsViewModel @Inject constructor(
         updateDarkModeUseCase(params)
     }
 
-    private suspend fun handleEvent(
+    private fun logOut() = viewModelScope.launch(Dispatchers.IO) {
+        logOutUseCase().onSuccess {
+            val effect = SettingsNavigationEffect.NavigateLogin
+            navigationEffect.trySend(effect)
+        }
+    }
+
+    private fun deleteAccount() = viewModelScope.launch(Dispatchers.IO) {
+        deleteAccountUseCase().onSuccess {
+            val effect = SettingsNavigationEffect.NavigateLogin
+            navigationEffect.trySend(effect)
+        }
+    }
+
+    private fun getUser() = viewModelScope.launch(Dispatchers.IO) {
+        val user = getUserUseCase().getOrNull() ?: return@launch
+        val event = SettingsEvent.UpdateUser(user)
+        state.handleEvent(event)
+    }
+
+    private fun handleEvent(
         currentState: SettingsState,
         event: SettingsEvent,
     ): SettingsState {
@@ -65,18 +90,12 @@ class SettingsViewModel @Inject constructor(
             sendNotificationsSettingUpdate = {
                 return currentState.copy(notificationsChecked = it)
             },
-            logOutClicked = {
-                logOutUseCase().onSuccess {
-                    val effect = SettingsNavigationEffect.NavigateLogin
-                    navigationEffect.trySend(effect)
-                }
+            logOutClicked = { logOut() },
+            deleteAccountClicked = { deleteAccount() },
+            updateUser = { user ->
+                return currentState.copy(user = user)
             },
-            deleteAccountClicked = {
-                deleteAccountUseCase().onSuccess {
-                    val effect = SettingsNavigationEffect.NavigateLogin
-                    navigationEffect.trySend(effect)
-                }
-            },
+            getUser = { getUser() },
         )
         return currentState
     }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,11 +25,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
+import com.gm.ai.guidebook.model.User
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
+ *
+ * TODO Extract to separate files
+ *
  */
 
 @Preview
@@ -37,6 +42,11 @@ fun SettingsScreenPreview() {
     val state = SettingsState(
         darkModeEnabled = true,
         notificationsChecked = true,
+        user = User(
+            id = "da",
+            username = "Gleb",
+            email = "gle.bushkaa",
+        ),
     )
     GuideBookTheme(darkTheme = state.darkModeEnabled) {
         SettingsScreen(
@@ -47,17 +57,52 @@ fun SettingsScreenPreview() {
 
 @Composable
 fun SettingsScreen(
-    state: SettingsState = SettingsState(),
+    state: SettingsState,
     sendEvent: (SettingsEvent) -> Unit = {},
 ) {
     val isSystemInDarkMode = isSystemInDarkTheme()
 
+    LaunchedEffect(key1 = Unit) {
+        listOf(
+            SettingsEvent.GetUser,
+            SettingsEvent.SendSystemDarkModeSetting(isSystemInDarkMode),
+        ).forEach {
+            sendEvent(it)
+        }
+    }
+
+    SettingsScreenContent(
+        state = state,
+        sendEvent = sendEvent,
+    )
+}
+
+@Composable
+fun SettingsScreenContent(
+    state: SettingsState,
+    sendEvent: (SettingsEvent) -> Unit = {},
+) {
     Column(
         modifier = Modifier
             .background(GuideTheme.palette.background)
             .fillMaxSize()
             .padding(horizontal = GuideTheme.offset.regular),
     ) {
+        Text(
+            text = "Profile",
+            modifier = Modifier.padding(
+                start = GuideTheme.offset.regular,
+                top = GuideTheme.offset.regular,
+            ),
+            style = GuideTheme.typography.titleMedium,
+            color = GuideTheme.palette.onBackground,
+        )
+        ProfileSection(
+            modifier = Modifier.padding(
+                top = GuideTheme.offset.regular,
+            ),
+            user = state.user,
+        )
         Text(
             text = "Preferences",
             modifier = Modifier.padding(
@@ -119,11 +164,6 @@ fun SettingsScreen(
             style = GuideTheme.typography.titleMedium,
             color = GuideTheme.palette.error,
         )
-    }
-
-    LaunchedEffect(key1 = Unit) {
-        val event = SettingsEvent.SendSystemDarkModeSetting(isSystemInDarkMode)
-        sendEvent(event)
     }
 }
 
@@ -227,5 +267,53 @@ private fun LogOutSection(
             style = GuideTheme.typography.titleMedium,
             color = GuideTheme.palette.error,
         )
+    }
+}
+
+@Composable
+private fun ProfileSection(
+    modifier: Modifier = Modifier,
+    user: User,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(54.dp)
+            .background(
+                color = GuideTheme.palette.surface,
+                shape = GuideTheme.shape.medium,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            modifier = Modifier
+                .padding(start = GuideTheme.offset.medium)
+                .size(40.dp)
+                .background(
+                    color = GuideTheme.palette.onBackground,
+                    shape = GuideTheme.shape.round,
+                ),
+            painter = painterResource(id = R.drawable.ic_profile),
+            contentDescription = null,
+            tint = GuideTheme.palette.background,
+        )
+        Column(
+            modifier = Modifier.padding(
+                horizontal = GuideTheme.offset.regular,
+            ),
+        ) {
+            Text(
+                text = user.username,
+                style = GuideTheme.typography.titleMedium,
+                color = GuideTheme.palette.onSurface,
+            )
+            Text(
+                text = user.email,
+                style = GuideTheme.typography.bodyMedium,
+                color = GuideTheme.palette.onSurface.copy(
+                    alpha = 0.6f,
+                ),
+            )
+        }
     }
 }

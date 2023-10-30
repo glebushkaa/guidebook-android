@@ -3,6 +3,7 @@ package com.gm.ai.guidebook.ui.screen.details
 import androidx.lifecycle.SavedStateHandle
 import com.gm.ai.guidebook.core.android.BaseViewModel
 import com.gm.ai.guidebook.core.android.stateReducerFlow
+import com.gm.ai.guidebook.domain.usecase.auth.GetUserUseCase
 import com.gm.ai.guidebook.domain.usecase.guides.GetGuideDetailsByIdUseCase
 import com.gm.ai.guidebook.model.emptyGuideDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val getGuideDetailsByIdUseCase: GetGuideDetailsByIdUseCase,
+    private val getUserUseCase: GetUserUseCase,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
     val state = stateReducerFlow(
-        initialState = DetailsState(
-            guide = emptyGuideDetails(),
-        ),
+        initialState = DetailsState(guide = emptyGuideDetails()),
         reduceState = ::handleEvent,
     )
     val navigationEffect = Channel<DetailsNavigationEffect>()

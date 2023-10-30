@@ -9,3 +9,9 @@ data class User(
     val username: String,
     val email: String,
 )
+
+fun emptyUser(): User = User(
+    id = "",
+    username = "",
+    email = "",
+)

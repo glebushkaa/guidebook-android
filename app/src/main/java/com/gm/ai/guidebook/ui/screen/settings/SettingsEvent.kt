@@ -1,10 +1,15 @@
 package com.gm.ai.guidebook.ui.screen.settings
 
+import com.gm.ai.guidebook.model.User
+
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
  */
 
 sealed class SettingsEvent {
+
+    data object GetUser : SettingsEvent()
+    data class UpdateUser(val user: User) : SettingsEvent()
     data object DeleteAccountClicked : SettingsEvent()
     data object LogOutClicked : SettingsEvent()
 
@@ -24,6 +29,8 @@ sealed class SettingsEvent {
         sendNotificationsSettingUpdate: (Boolean) -> Unit = {},
         logOutClicked: () -> Unit = {},
         deleteAccountClicked: () -> Unit = {},
+        updateUser: (User) -> Unit = {},
+        getUser: () -> Unit = {},
     ) {
         when (this) {
             AlterDarkMode -> alterDarkMode()
@@ -32,6 +39,8 @@ sealed class SettingsEvent {
             is SendNotificationsSettingUpdate -> sendNotificationsSettingUpdate(notificationsEnabled)
             LogOutClicked -> logOutClicked()
             DeleteAccountClicked -> deleteAccountClicked()
+            is UpdateUser -> updateUser(user)
+            GetUser -> getUser()
         }
     }
 }
