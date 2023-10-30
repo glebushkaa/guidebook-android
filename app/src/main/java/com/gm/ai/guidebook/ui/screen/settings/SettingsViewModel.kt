@@ -58,14 +58,14 @@ class SettingsViewModel @Inject constructor(
     private fun logOut() = viewModelScope.launch(Dispatchers.IO) {
         logOutUseCase().onSuccess {
             val effect = SettingsNavigationEffect.NavigateLogin
-            navigationEffect.trySend(effect)
+            navigationEffect.send(effect)
         }
     }
 
     private fun deleteAccount() = viewModelScope.launch(Dispatchers.IO) {
         deleteAccountUseCase().onSuccess {
             val effect = SettingsNavigationEffect.NavigateLogin
-            navigationEffect.trySend(effect)
+            navigationEffect.send(effect)
         }
     }
 

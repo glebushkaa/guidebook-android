@@ -61,7 +61,6 @@ fun LoginScreen(
     state: LoginScreenState = LoginScreenState(),
     sendEvent: (LoginScreenEvent) -> Unit = {},
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val titleText = when (state.loginMode) {
         LoginMode.SIGN_IN -> "Sign in"
