@@ -35,10 +35,12 @@ fun BackButton(
         onClick = onClick,
     ) {
         Icon(
-            modifier = Modifier.rotate(180f),
+            modifier = Modifier.rotate(ICON_ROTATION_ANGLE),
             painter = painterResource(id = R.drawable.ic_arrow_next),
             contentDescription = null,
             tint = tint,
         )
     }
 }
+
+private const val ICON_ROTATION_ANGLE = 180f

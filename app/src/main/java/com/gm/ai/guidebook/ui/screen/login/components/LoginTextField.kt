@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,7 +45,9 @@ fun LoginTextField(
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 54.dp),
+            .heightIn(
+                min = dimensionResource(R.dimen.min_login_text_field_height)
+            ),
         value = value,
         onValueChange = {
             val query = if (it.length > MAX_QUERY_LENGTH) {
@@ -57,9 +60,7 @@ fun LoginTextField(
         supportingText = {
             Text(
                 text = supportingText,
-                style = GuideTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                ),
+                style = GuideTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 color = GuideTheme.palette.error,
             )
         },
@@ -80,7 +81,7 @@ fun LoginTextField(
                 text = placeholder,
                 style = GuideTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = GuideTheme.palette.onSurface.copy(
-                    alpha = 0.6f,
+                    alpha = PLACEHOLDER_TEXT_ALPHA,
                 ),
             )
         },
@@ -110,10 +111,13 @@ fun LoginTextField(
             unfocusedContainerColor = GuideTheme.palette.surface,
             focusedIndicatorColor = GuideTheme.palette.primary,
             errorIndicatorColor = GuideTheme.palette.error,
-            errorContainerColor = GuideTheme.palette.error.copy(alpha = 0.1f),
+            errorContainerColor = GuideTheme.palette.error.copy(alpha = ERROR_CONTAINER_COLOR_ALPHA),
         ),
         shape = GuideTheme.shape.huge,
     )
 }
 
 private const val MAX_QUERY_LENGTH = 100
+
+private const val PLACEHOLDER_TEXT_ALPHA = 0.6f
+private const val ERROR_CONTAINER_COLOR_ALPHA = 0.1f

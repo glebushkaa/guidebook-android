@@ -58,21 +58,21 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun handleEvent(currentState: DetailsState, event: DetailsEvent): DetailsState {
-        event.handle(
-            backEvent = {
+        when (event) {
+            is DetailsEvent.BackEvent -> {
                 val navEffect = DetailsNavigationEffect.NavigateBack
                 navigationEffect.trySend(navEffect)
-            },
-            updateGuideDetails = { guideDetails ->
-                return currentState.copy(guide = guideDetails)
-            },
-            likedClicked = {
+            }
+            is DetailsEvent.UpdateGuideDetails -> {
+                return currentState.copy(guide = event.guideDetails)
+            }
+            DetailsEvent.LikeClicked -> {
                 val currentGuide = currentState.guide
                 val newGuide = currentState.guide.copy(favorite = !currentGuide.favorite)
                 handleLikeClickedEvent(currentGuide)
                 return currentState.copy(guide = newGuide)
-            },
-        )
+            }
+        }
         return currentState
     }
 }

@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,9 @@ fun GuideSearch(
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 54.dp),
+            .heightIn(
+                min = dimensionResource(R.dimen.search_min_height)
+            ),
         value = value,
         onValueChange = {
             val query = if (it.length > MAX_SEARCH_QUERY_LENGTH) {
@@ -50,10 +54,10 @@ fun GuideSearch(
         },
         placeholder = {
             Text(
-                text = "Search",
+                text = stringResource(R.string.search),
                 style = GuideTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = GuideTheme.palette.onSurface.copy(
-                    alpha = 0.6f,
+                    alpha = SEARCH_HINT_ALPHA,
                 ),
             )
         },
@@ -81,3 +85,4 @@ private fun GuideSearchPreview() {
 }
 
 private const val MAX_SEARCH_QUERY_LENGTH = 100
+private const val SEARCH_HINT_ALPHA = 0.6f

@@ -21,41 +21,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.android.extensions.clickableWithoutRipple
 import com.gm.ai.guidebook.model.User
 import com.gm.ai.guidebook.ui.dialogs.ConfirmationDialog
+import com.gm.ai.guidebook.ui.screen.settings.sections.AppearanceSection
+import com.gm.ai.guidebook.ui.screen.settings.sections.LogOutSection
+import com.gm.ai.guidebook.ui.screen.settings.sections.NotificationSection
+import com.gm.ai.guidebook.ui.screen.settings.sections.ProfileSection
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
- *
- * TODO Extract to separate files
- *
  */
-
-@Preview
-@Composable
-fun SettingsScreenPreview() {
-    val state = SettingsState(
-        darkModeEnabled = true,
-        notificationsChecked = true,
-        user = User(
-            id = "da",
-            username = "Gleb",
-            email = "gle.bushkaa",
-        ),
-    )
-    GuideBookTheme(darkTheme = state.darkModeEnabled) {
-        SettingsScreen(
-            state = state,
-        )
-    }
-}
 
 @Composable
 fun SettingsScreen(
@@ -71,8 +55,8 @@ fun SettingsScreen(
 
     if (state.visibleDialog == SettingDialogs.DELETE) {
         ConfirmationDialog(
-            title = "Delete account",
-            description = "Are you sure you want to delete your account?",
+            title = stringResource(R.string.delete_account),
+            description = stringResource(R.string.delete_account_question),
             onConfirm = {
                 listOf(
                     SettingsEvent.HideDialogs,
@@ -88,8 +72,8 @@ fun SettingsScreen(
 
     if (state.visibleDialog == SettingDialogs.LOG_OUT) {
         ConfirmationDialog(
-            title = "Log out",
-            description = "Are you sure you want to log out?",
+            title = stringResource(R.string.log_out),
+            description = stringResource(R.string.log_out_question),
             onConfirm = {
                 listOf(
                     SettingsEvent.HideDialogs,
@@ -121,7 +105,7 @@ fun SettingsScreenContent(
             .padding(horizontal = GuideTheme.offset.regular),
     ) {
         Text(
-            text = "Profile",
+            text = stringResource(R.string.profile),
             modifier = Modifier.padding(
                 start = GuideTheme.offset.regular,
                 top = GuideTheme.offset.regular,
@@ -136,10 +120,10 @@ fun SettingsScreenContent(
             user = state.user,
         )
         Text(
-            text = "Preferences",
+            text = stringResource(R.string.preferences),
             modifier = Modifier.padding(
                 start = GuideTheme.offset.regular,
-                top = GuideTheme.offset.regular,
+                top = GuideTheme.offset.large,
             ),
             style = GuideTheme.typography.titleMedium,
             color = GuideTheme.palette.onBackground,
@@ -165,10 +149,10 @@ fun SettingsScreenContent(
             },
         )
         Text(
-            text = "Account",
+            text = stringResource(R.string.account),
             modifier = Modifier.padding(
                 start = GuideTheme.offset.regular,
-                top = GuideTheme.offset.gigantic,
+                top = GuideTheme.offset.large,
             ),
             style = GuideTheme.typography.titleMedium,
             color = GuideTheme.palette.onBackground,
@@ -192,163 +176,9 @@ fun SettingsScreenContent(
                     val event = SettingsEvent.ShowDeleteAccountDialog
                     sendEvent(event)
                 },
-            text = "Delete account",
+            text = stringResource(R.string.delete_account),
             style = GuideTheme.typography.titleMedium,
             color = GuideTheme.palette.error,
         )
-    }
-}
-
-@Composable
-private fun AppearanceSection(
-    modifier: Modifier = Modifier,
-    darkModeEnabled: Boolean,
-    onClick: () -> Unit = {},
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp)
-            .background(
-                color = GuideTheme.palette.surface,
-                shape = GuideTheme.shape.medium,
-            ),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Text(
-            modifier = Modifier.padding(start = GuideTheme.offset.regular),
-            text = "Appearance",
-            style = GuideTheme.typography.titleMedium,
-            color = GuideTheme.palette.onSurface,
-        )
-        Button(
-            modifier = Modifier
-                .padding(end = GuideTheme.offset.regular)
-                .size(40.dp)
-                .align(Alignment.CenterEnd),
-            contentPadding = PaddingValues(GuideTheme.offset.tiny),
-            shape = GuideTheme.shape.medium,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = GuideTheme.palette.onSurface.copy(alpha = 0.4f),
-            ),
-            onClick = onClick,
-        ) {
-            val icon = if (darkModeEnabled) R.drawable.ic_moon else R.drawable.ic_sun
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                tint = GuideTheme.palette.surface,
-            )
-        }
-    }
-}
-
-@Composable
-private fun NotificationSection(
-    modifier: Modifier = Modifier,
-    checked: Boolean = true,
-    onCheckedChange: (Boolean) -> Unit = {},
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp)
-            .background(
-                color = GuideTheme.palette.surface,
-                shape = GuideTheme.shape.medium,
-            ),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Text(
-            modifier = Modifier.padding(start = GuideTheme.offset.regular),
-            text = "Notifications",
-            style = GuideTheme.typography.titleMedium,
-            color = GuideTheme.palette.onSurface,
-        )
-        Switch(
-            modifier = Modifier
-                .padding(end = GuideTheme.offset.regular)
-                .align(Alignment.CenterEnd),
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedTrackColor = GuideTheme.palette.primary,
-            )
-        )
-    }
-}
-
-@Composable
-private fun LogOutSection(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp)
-            .background(
-                color = GuideTheme.palette.surface,
-                shape = GuideTheme.shape.medium,
-            ),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(start = GuideTheme.offset.regular)
-                .clickableWithoutRipple(onClick),
-            text = "Log out",
-            style = GuideTheme.typography.titleMedium,
-            color = GuideTheme.palette.error,
-        )
-    }
-}
-
-@Composable
-private fun ProfileSection(
-    modifier: Modifier = Modifier,
-    user: User,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp)
-            .background(
-                color = GuideTheme.palette.surface,
-                shape = GuideTheme.shape.medium,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            modifier = Modifier
-                .padding(start = GuideTheme.offset.medium)
-                .size(40.dp)
-                .background(
-                    color = GuideTheme.palette.onBackground,
-                    shape = GuideTheme.shape.round,
-                ),
-            painter = painterResource(id = R.drawable.ic_profile),
-            contentDescription = null,
-            tint = GuideTheme.palette.background,
-        )
-        Column(
-            modifier = Modifier.padding(
-                horizontal = GuideTheme.offset.regular,
-            ),
-        ) {
-            Text(
-                text = user.username,
-                style = GuideTheme.typography.titleMedium,
-                color = GuideTheme.palette.onSurface,
-            )
-            Text(
-                text = user.email,
-                style = GuideTheme.typography.bodyMedium,
-                color = GuideTheme.palette.onSurface.copy(
-                    alpha = 0.6f,
-                ),
-            )
-        }
     }
 }

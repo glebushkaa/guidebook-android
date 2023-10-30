@@ -62,7 +62,6 @@ fun HomeScreen(
             .padding(GuideTheme.offset.regular),
     ) {
         GuideSearch(
-            modifier = Modifier.layoutId(HOME_SEARCH_BAR),
             value = state.searchQuery,
             onValueChanged = {
                 val event = HomeEvent.SendSearchQuery(it)
@@ -145,37 +144,3 @@ private fun NoGuideItems(
         )
     }
 }
-
-private fun homeScreenDecoupledConstraints(
-    mediumOffset: Dp,
-    regularOffset: Dp,
-    superGiganticOffset: Dp,
-) = ConstraintSet {
-    val homeSearchBar = createRefFor(HOME_SEARCH_BAR)
-    val noGuidesItem = createRefFor(NO_GUIDES_ITEM)
-    val guidesList = createRefFor(GUIDES_LIST)
-
-    constrain(homeSearchBar) {
-        top.linkTo(anchor = parent.top, margin = mediumOffset)
-        start.linkTo(anchor = parent.start)
-        end.linkTo(anchor = parent.end)
-    }
-
-    constrain(noGuidesItem) {
-        top.linkTo(anchor = homeSearchBar.bottom)
-        start.linkTo(anchor = parent.start)
-        end.linkTo(anchor = parent.end)
-        bottom.linkTo(anchor = parent.bottom, margin = superGiganticOffset)
-    }
-
-    constrain(guidesList) {
-        top.linkTo(anchor = homeSearchBar.bottom, margin = regularOffset)
-        start.linkTo(anchor = parent.start)
-        end.linkTo(anchor = parent.end)
-    }
-}
-
-private const val HOME_SEARCH_BAR = "home_search_bar"
-
-private const val NO_GUIDES_ITEM = "no_guides_item"
-private const val GUIDES_LIST = "guides_list"

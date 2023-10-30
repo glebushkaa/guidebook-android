@@ -15,11 +15,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 
@@ -91,18 +94,24 @@ private fun ConfirmationDialogContent(
             ),
             text = description,
             style = GuideTheme.typography.bodyMedium,
-            color = GuideTheme.palette.onSurface.copy(alpha = 0.6f),
+            color = GuideTheme.palette.onSurface.copy(
+                alpha = DESCRIPTION_TEXT_ALPHA
+            ),
             textAlign = TextAlign.Center,
         )
         Divider(
             modifier = Modifier
                 .padding(top = GuideTheme.offset.regular)
                 .fillMaxWidth(),
-            color = GuideTheme.palette.onSurface.copy(alpha = 0.4f),
+            color = GuideTheme.palette.onSurface.copy(
+                alpha = DIVIDER_ALPHA
+            ),
         )
         Row(
             modifier = Modifier
-                .height(54.dp)
+                .height(
+                    dimensionResource(R.dimen.confirmation_button_row_height)
+                )
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
@@ -113,7 +122,7 @@ private fun ConfirmationDialogContent(
                 onClick = onCancel,
             ) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(R.string.cancel),
                     style = GuideTheme.typography.bodyLargeBold.copy(
                         fontWeight = FontWeight.Medium,
                     ),
@@ -123,8 +132,12 @@ private fun ConfirmationDialogContent(
             Divider(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(1.dp),
-                color = GuideTheme.palette.onSurface.copy(alpha = 0.4f),
+                    .width(
+                        dimensionResource(R.dimen.vertical_confirmation_divider_width)
+                    ),
+                color = GuideTheme.palette.onSurface.copy(
+                    alpha = DIVIDER_ALPHA
+                ),
             )
             TextButton(
                 modifier = Modifier
@@ -133,7 +146,7 @@ private fun ConfirmationDialogContent(
                 onClick = onConfirm,
             ) {
                 Text(
-                    text = "Confirm",
+                    text = stringResource(R.string.confirm),
                     style = GuideTheme.typography.bodyLargeBold.copy(
                         fontWeight = FontWeight.Medium,
                     ),
@@ -143,3 +156,6 @@ private fun ConfirmationDialogContent(
         }
     }
 }
+
+private const val DESCRIPTION_TEXT_ALPHA = 0.6f
+private const val DIVIDER_ALPHA = 0.4f

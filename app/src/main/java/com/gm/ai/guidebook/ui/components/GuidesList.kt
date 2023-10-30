@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,10 +48,6 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme
 private fun GuideItemPreview() {
     GuideBookTheme {
         GuideItem(
-            modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()
-                .background(GuideTheme.palette.surface),
             guide = Guide(
                 id = "1",
                 emoji = "👋",
@@ -112,7 +109,9 @@ private fun GuideItem(
 ) {
     Row(
         modifier = modifier
-            .height(100.dp)
+            .height(
+                dimensionResource(R.dimen.guide_item_height)
+            )
             .fillMaxWidth()
             .background(GuideTheme.palette.surface)
             .clickableWithoutRipple {
@@ -125,7 +124,7 @@ private fun GuideItem(
                 start = GuideTheme.offset.regular
             ),
             text = guide.emoji,
-            fontSize = 32.sp,
+            style = GuideTheme.typography.headlineMedium,
         )
         Column(
             modifier = Modifier
@@ -140,7 +139,7 @@ private fun GuideItem(
         ) {
             Text(
                 text = guide.title,
-                maxLines = 1,
+                maxLines = MAX_TITLE_LINES,
                 overflow = TextOverflow.Ellipsis,
                 style = GuideTheme.typography.titleMedium,
                 color = GuideTheme.palette.onSurface,
@@ -150,8 +149,8 @@ private fun GuideItem(
                 modifier = Modifier.padding(top = GuideTheme.offset.tiny),
                 text = guide.description,
                 style = GuideTheme.typography.bodyMedium,
-                color = GuideTheme.palette.onSurface.copy(alpha = 0.8f),
-                maxLines = 2,
+                color = GuideTheme.palette.onSurface.copy(alpha = DESCRIPTION_TEXT_ALPHA),
+                maxLines = MAX_DESCRIPTION_LINES,
                 overflow = TextOverflow.Ellipsis,
             )
         }
@@ -163,3 +162,8 @@ private fun GuideItem(
         )
     }
 }
+
+private const val MAX_TITLE_LINES = 1
+private const val MAX_DESCRIPTION_LINES = 2
+
+private const val DESCRIPTION_TEXT_ALPHA = 0.8f

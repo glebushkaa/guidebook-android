@@ -34,20 +34,23 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun handleEvent(currentState: FavoritesState, event: FavoritesEvent): FavoritesState {
-        event.handle(
-            updateGuidesList = { list ->
-                return currentState.copy(guides = list)
-            },
-            navigateToDetailsScreen = { guideId ->
-                val navEffect = FavoritesNavigationEffect.NavigateDetailsScreen(guideId)
+        when (event) {
+            is FavoritesEvent.UpdateGuidesList -> {
+                return currentState.copy(guides = event.list)
+            }
+
+            is FavoritesEvent.NavigateToDetailsScreen -> {
+                val navEffect = FavoritesNavigationEffect.NavigateDetailsScreen(event.guideId)
                 navigationEffect.trySend(navEffect)
-            },
-            sendSearchQuery = { query ->
-                searchFavorites(query = query)
-                return currentState.copy(searchQuery = query)
-            },
-            askFavorites = { searchFavorites() },
-        )
+            }
+
+            is FavoritesEvent.SendSearchQuery -> {
+                searchFavorites(query = event.query)
+                return currentState.copy(searchQuery = event.query)
+            }
+
+            FavoritesEvent.AskFavorites -> searchFavorites()
+        }
         return currentState
     }
 }

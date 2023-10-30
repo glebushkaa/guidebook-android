@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.gm.ai.guidebook.ui.screen.login
 
 import androidx.compose.foundation.Image
@@ -22,7 +20,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -62,13 +60,11 @@ fun LoginScreen(
     sendEvent: (LoginScreenEvent) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
-    val titleText = when (state.loginMode) {
-        LoginMode.SIGN_IN -> "Sign in"
-        LoginMode.SIGN_UP -> "Sign up"
+    val titleTextResId = when (state.loginMode) {
+        LoginMode.SIGN_IN -> R.string.sign_in
+        LoginMode.SIGN_UP -> R.string.sign_up
     }
-    val loginText = buildLoginText(
-        loginMode = state.loginMode,
-    )
+    val loginText = buildLoginText(loginMode = state.loginMode)
 
     Column(
         modifier = Modifier
@@ -86,7 +82,9 @@ fun LoginScreen(
             ),
         ) {
             Image(
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(
+                    dimensionResource(R.dimen.login_book_icon_size)
+                ),
                 painter = painterResource(id = R.drawable.img_book),
                 contentDescription = null,
             )
@@ -98,7 +96,7 @@ fun LoginScreen(
         }
         Text(
             modifier = Modifier.padding(top = GuideTheme.offset.large),
-            text = titleText,
+            text = stringResource(titleTextResId),
             style = GuideTheme.typography.headlineLarge,
             color = GuideTheme.palette.onBackground,
         )
@@ -106,7 +104,7 @@ fun LoginScreen(
         if (state.loginMode == LoginMode.SIGN_UP) {
             LoginTextField(
                 value = state.username,
-                placeholder = "Username",
+                placeholder = stringResource(R.string.username),
                 isError = state.usernameTextFieldError?.isNotEmpty() == true,
                 supportingText = state.usernameTextFieldError ?: "",
                 onValueChanged = {
@@ -122,7 +120,7 @@ fun LoginScreen(
             value = state.email,
             isError = state.emailTextFieldError?.isNotEmpty() == true,
             supportingText = state.emailTextFieldError ?: "",
-            placeholder = "Email",
+            placeholder = stringResource(R.string.email),
             onValueChanged = {
                 val event = LoginScreenEvent.UpdateEmailTextField(it)
                 sendEvent(event)
@@ -132,7 +130,7 @@ fun LoginScreen(
         LoginTextField(
             modifier = Modifier.padding(top = GuideTheme.offset.medium),
             value = state.password,
-            placeholder = "Password",
+            placeholder = stringResource(R.string.password),
             isError = state.passwordTextFieldError?.isNotEmpty() == true,
             supportingText = state.passwordTextFieldError ?: "",
             onValueChanged = {
@@ -145,11 +143,15 @@ fun LoginScreen(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
+                .height(
+                    dimensionResource(id = R.dimen.login_button_height)
+                ),
             enabled = state.loginButtonEnabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = GuideTheme.palette.primary,
-                disabledContainerColor = GuideTheme.palette.primary.copy(alpha = 0.2f),
+                disabledContainerColor = GuideTheme.palette.primary.copy(
+                    alpha = LOGIN_DISABLED_CONTAINER_COLOR_ALPHA
+                ),
             ),
             shape = GuideTheme.shape.small,
             onClick = {
@@ -159,7 +161,7 @@ fun LoginScreen(
             },
         ) {
             Text(
-                text = titleText,
+                text = stringResource(titleTextResId),
                 style = GuideTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
                 ),
@@ -195,12 +197,12 @@ private fun buildLoginText(
     loginMode: LoginMode,
 ): AnnotatedString {
     val startText = when (loginMode) {
-        LoginMode.SIGN_IN -> "Don't have an account? "
-        LoginMode.SIGN_UP -> "Already have an account? "
+        LoginMode.SIGN_IN -> stringResource(R.string.sign_up_question)
+        LoginMode.SIGN_UP -> stringResource(R.string.sign_in_question)
     }
     val endText = when (loginMode) {
-        LoginMode.SIGN_IN -> "Sign up"
-        LoginMode.SIGN_UP -> "Sign in"
+        LoginMode.SIGN_IN -> stringResource(R.string.sign_up)
+        LoginMode.SIGN_UP -> stringResource(R.string.sign_in)
     }
     return buildAnnotatedString {
         withStyle(
@@ -213,7 +215,9 @@ private fun buildLoginText(
         pushStringAnnotation(tag = LOGIN_ANNOTATION_TAG, annotation = "")
         withStyle(
             style = SpanStyle(
-                color = GuideTheme.palette.primary.copy(alpha = 0.6f),
+                color = GuideTheme.palette.primary.copy(
+                    alpha = LOGIN_LINK_TEXT_COLOR_ALPHA
+                ),
             ),
         ) {
             append(endText)
@@ -223,3 +227,6 @@ private fun buildLoginText(
 }
 
 private const val LOGIN_ANNOTATION_TAG = "login"
+
+private const val LOGIN_DISABLED_CONTAINER_COLOR_ALPHA = 0.2f
+private const val LOGIN_LINK_TEXT_COLOR_ALPHA = 0.6f

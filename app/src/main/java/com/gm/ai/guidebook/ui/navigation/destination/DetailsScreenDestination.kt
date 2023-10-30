@@ -29,13 +29,22 @@ fun NavGraphBuilder.detailsScreenDestination(
         route = DetailsScreenRoute.routeWithArgs,
         arguments = DetailsScreenRoute.arguments,
         enterTransition = {
-            slideInHorizontally(animationSpec = animSpec, initialOffsetX = { it * 2 })
+            slideInHorizontally(
+                animationSpec = animSpec,
+                initialOffsetX = { it * X_OFFSET_MULTIPLIER }
+            )
         },
         exitTransition = {
-            slideOutHorizontally(animationSpec = animSpec, targetOffsetX = { it * 2 })
+            slideOutHorizontally(
+                animationSpec = animSpec,
+                targetOffsetX = { it * X_OFFSET_MULTIPLIER }
+            )
         },
         popExitTransition = {
-            slideOutHorizontally(animationSpec = animSpec, targetOffsetX = { it * 2 })
+            slideOutHorizontally(
+                animationSpec = animSpec,
+                targetOffsetX = { it * X_OFFSET_MULTIPLIER }
+            )
         },
     ) {
         val viewModel = hiltViewModel<DetailsViewModel>()
@@ -54,3 +63,5 @@ fun NavGraphBuilder.detailsScreenDestination(
         }
     }
 }
+
+private const val X_OFFSET_MULTIPLIER = 2

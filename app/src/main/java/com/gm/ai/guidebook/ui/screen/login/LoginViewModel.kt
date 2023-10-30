@@ -59,7 +59,7 @@ class LoginViewModel @Inject constructor(
     private fun validateUsername(username: String): Boolean {
         val username = username.trim()
         return username.length >= MIN_USERNAME_LENGTH &&
-            !username.contains("[!\"#$%&'()*+,-/:;\\\\<=>?@\\[\\]^`{|}~]".toRegex())
+                !username.contains("[!\"#$%&'()*+,-/:;\\\\<=>?@\\[\\]^`{|}~]".toRegex())
     }
 
     private fun validatePassword(password: String): Boolean {
@@ -108,53 +108,60 @@ class LoginViewModel @Inject constructor(
         currentState: LoginScreenState,
         event: LoginScreenEvent,
     ): LoginScreenState {
-        event.handle(
-            sendNewLoginMode = {
+        when (event) {
+            is LoginScreenEvent.SwapLoginMode -> {
                 val newMode = swapLoginMode()
                 validateInput(loginMode = newMode)
                 return currentState.copy(loginMode = newMode)
-            },
-            updateEmailTextField = { email ->
-                validateInput(email = email)
+            }
+
+            is LoginScreenEvent.UpdateEmailTextField -> {
+                validateInput(email = event.email)
                 return currentState.copy(
-                    email = email,
+                    email = event.email,
                     emailTextFieldError = null,
                 )
-            },
-            updateUsernameTextField = { username ->
-                validateInput(username = username)
+            }
+
+            is LoginScreenEvent.UpdatePasswordTextField -> {
+                validateInput(password = event.password)
                 return currentState.copy(
-                    username = username,
-                    usernameTextFieldError = null,
-                )
-            },
-            updatePasswordTextField = { password ->
-                validateInput(password = password)
-                return currentState.copy(
-                    password = password,
+                    password = event.password,
                     passwordTextFieldError = null,
                 )
-            },
-            disableLoginButton = {
+            }
+
+            is LoginScreenEvent.UpdateUsernameTextField -> {
+                validateInput(username = event.username)
+                return currentState.copy(
+                    username = event.username,
+                    usernameTextFieldError = null,
+                )
+            }
+
+            LoginScreenEvent.DisableLoginButton -> {
                 return currentState.copy(loginButtonEnabled = false)
-            },
-            enableLoginButton = {
+            }
+
+            LoginScreenEvent.EnableLoginButton -> {
                 return currentState.copy(loginButtonEnabled = true)
-            },
-            loginClicked = {
+            }
+
+            LoginScreenEvent.LoginClicked -> {
                 when (currentState.loginMode) {
                     LoginMode.SIGN_IN -> signIn()
                     LoginMode.SIGN_UP -> signUp()
                 }
-            },
-            sendTextFieldMessage = { field, message ->
-                return when (field) {
-                    LoginField.EMAIL -> currentState.copy(emailTextFieldError = message)
-                    LoginField.PASSWORD -> currentState.copy(passwordTextFieldError = message)
-                    LoginField.USERNAME -> currentState.copy(usernameTextFieldError = message)
+            }
+
+            is LoginScreenEvent.SendTextFieldMessage -> {
+                return when (event.field) {
+                    LoginField.EMAIL -> currentState.copy(emailTextFieldError = event.message)
+                    LoginField.PASSWORD -> currentState.copy(passwordTextFieldError = event.message)
+                    LoginField.USERNAME -> currentState.copy(usernameTextFieldError = event.message)
                 }
-            },
-        )
+            }
+        }
         return currentState
     }
 
