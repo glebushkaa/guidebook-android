@@ -5,7 +5,7 @@ package com.gm.ai.guidebook.ui.screen.login
  */
 
 data class LoginScreenState(
-    val loginMode: LoginMode = LoginMode.SIGN_UP,
+    val loginMode: LoginMode = LoginMode.SIGN_IN,
     val loginButtonEnabled: Boolean = false,
     val email: String = "",
     val password: String = "",

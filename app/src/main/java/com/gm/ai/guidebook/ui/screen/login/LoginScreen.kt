@@ -24,6 +24,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -116,6 +117,7 @@ fun LoginScreen(
                 val event = LoginScreenEvent.UpdateEmailTextField(it)
                 sendEvent(event)
             },
+            keyboardType = KeyboardType.Email,
         )
         LoginTextField(
             modifier = Modifier.padding(top = GuideTheme.offset.medium),
@@ -125,6 +127,7 @@ fun LoginScreen(
                 val event = LoginScreenEvent.UpdatePasswordTextField(it)
                 sendEvent(event)
             },
+            keyboardType = KeyboardType.Password,
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
