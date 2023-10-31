@@ -1,7 +1,7 @@
 package com.gm.ai.guidebook.domain.usecase.guides
 
 import com.gm.ai.guidebook.domain.repository.GuideRepository
-import com.gm.ai.guidebook.domain.session.SessionStatusHandler
+import com.gm.ai.guidebook.session.api.SessionStatusHandler
 import com.gm.ai.guidebook.domain.usecase.core.ResultSuspendUseCase
 import com.gm.ai.guidebook.domain.usecase.core.UseCase
 import com.gm.ai.guidebook.domain.usecase.core.UseCaseLogger

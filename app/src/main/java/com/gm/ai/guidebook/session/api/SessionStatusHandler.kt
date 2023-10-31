@@ -1,4 +1,4 @@
-package com.gm.ai.guidebook.domain.session
+package com.gm.ai.guidebook.session.api
 
 import kotlinx.coroutines.flow.StateFlow
 

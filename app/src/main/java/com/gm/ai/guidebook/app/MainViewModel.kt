@@ -1,8 +1,8 @@
-package com.gm.ai.guidebook.ui
+package com.gm.ai.guidebook.app
 
 import com.gm.ai.guidebook.core.android.BaseViewModel
-import com.gm.ai.guidebook.domain.session.SessionStatus
-import com.gm.ai.guidebook.domain.session.SessionStatusHandler
+import com.gm.ai.guidebook.session.api.SessionStatus
+import com.gm.ai.guidebook.session.api.SessionStatusHandler
 import com.gm.ai.guidebook.domain.usecase.settings.CollectDarkModeUseCase
 import com.gm.ai.guidebook.domain.usecase.settings.UpdateDarkModeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

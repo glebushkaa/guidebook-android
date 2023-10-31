@@ -1,4 +1,4 @@
-package com.gm.ai.guidebook
+package com.gm.ai.guidebook.app
 
 import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics

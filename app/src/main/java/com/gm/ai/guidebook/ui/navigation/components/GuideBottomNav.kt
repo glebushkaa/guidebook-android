@@ -1,5 +1,9 @@
 package com.gm.ai.guidebook.ui.navigation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -21,6 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
+import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
 import com.gm.ai.guidebook.ui.navigation.route.BottomNavGuideRoute
 import com.gm.ai.guidebook.ui.navigation.route.FavoritesScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.HomeScreenRoute
@@ -38,7 +43,31 @@ private val bottomNavItems = listOf(
 )
 
 @Composable
-fun GuideBottomNavigation(
+fun AnimateBottomNavBar(
+    modifier: Modifier = Modifier,
+    controller: NavHostController,
+    visible: Boolean,
+) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = visible,
+        enter = expandVertically(
+            expandFrom = Alignment.Bottom,
+            animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
+        ),
+        exit = shrinkVertically(
+            shrinkTowards = Alignment.Bottom,
+            animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
+        ),
+    ) {
+        GuideBottomNavigation(
+            navController = controller,
+        )
+    }
+}
+
+@Composable
+private fun GuideBottomNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {

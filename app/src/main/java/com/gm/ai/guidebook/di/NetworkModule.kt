@@ -3,8 +3,8 @@ package com.gm.ai.guidebook.di
 import com.gm.ai.guidebook.data.network.AuthApi
 import com.gm.ai.guidebook.data.network.FavoritesApi
 import com.gm.ai.guidebook.data.network.GuidesApi
-import com.gm.ai.guidebook.data.session.SessionStatusHandlerImpl
-import com.gm.ai.guidebook.domain.session.SessionStatusHandler
+import com.gm.ai.guidebook.session.impl.SessionStatusHandlerImpl
+import com.gm.ai.guidebook.session.api.SessionStatusHandler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

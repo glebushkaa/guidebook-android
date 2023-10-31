@@ -1,6 +1,6 @@
 package com.gm.ai.guidebook.domain.usecase.core
 
-import com.gm.ai.guidebook.domain.session.SessionStatusHandler
+import com.gm.ai.guidebook.session.api.SessionStatusHandler
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023

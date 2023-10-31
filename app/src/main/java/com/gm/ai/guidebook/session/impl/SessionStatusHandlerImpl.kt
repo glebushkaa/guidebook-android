@@ -1,7 +1,7 @@
-package com.gm.ai.guidebook.data.session
+package com.gm.ai.guidebook.session.impl
 
-import com.gm.ai.guidebook.domain.session.SessionStatus
-import com.gm.ai.guidebook.domain.session.SessionStatusHandler
+import com.gm.ai.guidebook.session.api.SessionStatus
+import com.gm.ai.guidebook.session.api.SessionStatusHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.gm.ai.guidebook.log.error

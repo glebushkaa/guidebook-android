@@ -2,7 +2,7 @@ package com.gm.ai.guidebook.domain.usecase.auth
 
 import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import com.gm.ai.guidebook.domain.repository.AuthRepository
-import com.gm.ai.guidebook.domain.session.SessionStatusHandler
+import com.gm.ai.guidebook.session.api.SessionStatusHandler
 import com.gm.ai.guidebook.domain.usecase.core.ResultSuspendNoneParamsUseCase
 import com.gm.ai.guidebook.domain.usecase.core.UseCaseLogger
 import kotlinx.coroutines.Dispatchers
