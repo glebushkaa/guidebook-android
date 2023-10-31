@@ -54,9 +54,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun GuideApp() {
-        val view = LocalView.current
-        val backgroundColor = GuideTheme.palette.background
-        val surfaceColor = GuideTheme.palette.surface
         val systemDarkModeEnabled = isSystemInDarkTheme()
         val controller = rememberNavController()
 
@@ -76,48 +73,52 @@ class MainActivity : ComponentActivity() {
         }
 
         GuideBookTheme(darkModeEnabled ?: systemDarkModeEnabled) {
+            val view = LocalView.current
+            val backgroundColor = GuideTheme.palette.background
+            val surfaceColor = GuideTheme.palette.surface
             GuideAppContent(
                 currentRoute = currentEntry?.destination?.route,
                 controller = controller,
                 areBarsVisible = areBarsVisible,
             )
-        }
 
-        if (dialogVisible) {
-            SessionExpiredDialog {
-                dialogVisible = false
-                controller.navigatePopUpInclusive(
-                    route = LoginScreenRoute.route,
-                    popUpRoute = currentEntry?.destination?.route ?: ""
-                )
+
+            if (dialogVisible) {
+                SessionExpiredDialog {
+                    dialogVisible = false
+                    controller.navigatePopUpInclusive(
+                        route = LoginScreenRoute.route,
+                        popUpRoute = currentEntry?.destination?.route ?: ""
+                    )
+                }
             }
-        }
 
-        LaunchedEffect(
-            key1 = sessionStatus,
-        ) {
-            if (
-                sessionStatus.alive ||
-                !checkSessionExpiredDialogRoute(currentEntry?.destination?.route)
-            ) return@LaunchedEffect
-            dialogVisible = true
-        }
+            LaunchedEffect(
+                key1 = sessionStatus,
+            ) {
+                if (
+                    sessionStatus.alive ||
+                    !checkSessionExpiredDialogRoute(currentEntry?.destination?.route)
+                ) return@LaunchedEffect
+                dialogVisible = true
+            }
 
-        LaunchedEffect(Unit) {
-            viewModel.saveSystemDarkMode(systemDarkModeEnabled)
-        }
+            LaunchedEffect(Unit) {
+                viewModel.saveSystemDarkMode(systemDarkModeEnabled)
+            }
 
-        LaunchedEffect(
-            key1 = areBarsVisible,
-            key2 = darkModeEnabled,
-        ) {
-            val window = this@MainActivity.window
-            val color = if (areBarsVisible) surfaceColor else backgroundColor
-            window.statusBarColor = color.toArgb()
-            window.navigationBarColor = color.toArgb()
-            WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = !(darkModeEnabled ?: systemDarkModeEnabled)
-                isAppearanceLightNavigationBars = !(darkModeEnabled ?: systemDarkModeEnabled)
+            LaunchedEffect(
+                key1 = areBarsVisible,
+                key2 = darkModeEnabled,
+            ) {
+                val window = this@MainActivity.window
+                val color = if (areBarsVisible) surfaceColor else backgroundColor
+                window.statusBarColor = color.toArgb()
+                window.navigationBarColor = color.toArgb()
+                WindowCompat.getInsetsController(window, view).apply {
+                    isAppearanceLightStatusBars = !(darkModeEnabled ?: systemDarkModeEnabled)
+                    isAppearanceLightNavigationBars = !(darkModeEnabled ?: systemDarkModeEnabled)
+                }
             }
         }
     }
