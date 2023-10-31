@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         setContent {
             GuideApp()
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
             .collectAsStateWithLifecycle(initialValue = null)
 
         val sessionStatus by viewModel.sessionStatusFlow
-            .collectAsStateWithLifecycle(initialValue = SessionStatus(false))
+            .collectAsStateWithLifecycle(initialValue = SessionStatus(true))
 
         var dialogVisible by remember { mutableStateOf(false) }
         val areBarsVisible by remember {

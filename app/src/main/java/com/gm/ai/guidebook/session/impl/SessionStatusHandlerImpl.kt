@@ -14,7 +14,7 @@ import javax.net.ssl.HttpsURLConnection
 
 class SessionStatusHandlerImpl @Inject constructor() : SessionStatusHandler {
 
-    private val _sessionStatus = MutableStateFlow(SessionStatus(false))
+    private val _sessionStatus = MutableStateFlow(SessionStatus(true))
     override val sessionStatus = _sessionStatus.asStateFlow()
 
     override fun validateException(throwable: Throwable) {
