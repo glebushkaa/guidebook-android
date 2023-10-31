@@ -18,7 +18,7 @@ class GuideApp : Application() {
     }
 
     private fun setupTimber() {
-        val tree = if (BuildConfig.DEBUG) Timber.DebugTree() else ReportingTree()
+        val tree = Timber.DebugTree()
         Timber.plant(tree)
     }
 }

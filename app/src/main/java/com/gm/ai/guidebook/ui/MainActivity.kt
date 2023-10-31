@@ -35,17 +35,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gm.ai.guidebook.R
-import com.gm.ai.guidebook.core.android.extensions.applyIf
 import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
 import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
-import com.gm.ai.guidebook.domain.SessionBus
+import com.gm.ai.guidebook.domain.session.SessionStatus
 import com.gm.ai.guidebook.ui.components.GuideIconButton
 import com.gm.ai.guidebook.ui.dialogs.SessionExpiredDialog
 import com.gm.ai.guidebook.ui.navigation.GuideNavHost
@@ -53,7 +51,6 @@ import com.gm.ai.guidebook.ui.navigation.components.GuideBottomNavigation
 import com.gm.ai.guidebook.ui.navigation.route.LoginScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.StepsScreenRoute
-import com.gm.ai.guidebook.ui.screen.steps.StepsEvent
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,9 +90,10 @@ class MainActivity : ComponentActivity() {
             derivedStateOf { checkAreBarsVisible(currentEntry) }
         }
 
-        val sessionAlive by SessionBus.sessionAlive
-            .consumeAsFlow()
-            .collectAsStateWithLifecycle(initialValue = true)
+        val sessionStatus by viewModel.sessionStatusFlow
+            .collectAsStateWithLifecycle(
+                initialValue = SessionStatus(false),
+            )
 
         var dialogVisible by remember { mutableStateOf(false) }
 
@@ -110,10 +108,10 @@ class MainActivity : ComponentActivity() {
         }
 
         LaunchedEffect(
-            key1 = sessionAlive,
+            key1 = sessionStatus,
         ) {
             if (
-                sessionAlive ||
+                sessionStatus.alive ||
                 !checkSessionExpiredDialogRoute(currentEntry?.destination?.route)
             ) return@LaunchedEffect
             dialogVisible = true
@@ -179,7 +177,9 @@ class MainActivity : ComponentActivity() {
     private fun checkSessionExpiredDialogRoute(
         currentRoute: String?,
     ): Boolean {
-        return currentRoute != SplashScreenRoute.route && currentRoute != LoginScreenRoute.route
+        return currentRoute != null &&
+                currentRoute != SplashScreenRoute.route &&
+                currentRoute != LoginScreenRoute.route
     }
 
     private fun checkAreBarsVisible(
