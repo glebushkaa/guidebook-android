@@ -8,4 +8,7 @@ import com.gm.ai.guidebook.model.GuideDetails
  */
 
 @Stable
-data class DetailsState(val guide: GuideDetails)
+data class DetailsState(
+    val guide: GuideDetails,
+    val stepsButtonVisible: Boolean = false,
+)

@@ -28,4 +28,7 @@
 
     <dimen name="splash_logo_image_size">60dp</dimen>
 
+    <dimen name="pager_controller_section_height">40dp</dimen>
+    <dimen name="step_image_height">300dp</dimen>
+
 </resources>

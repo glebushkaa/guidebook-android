@@ -2,12 +2,14 @@ package com.gm.ai.guidebook.data.repository
 
 import com.gm.ai.guidebook.data.mapper.toGuide
 import com.gm.ai.guidebook.data.mapper.toGuideDetails
+import com.gm.ai.guidebook.data.mapper.toStep
 import com.gm.ai.guidebook.data.network.GuidesApi
 import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import com.gm.ai.guidebook.domain.exception.AuthException
 import com.gm.ai.guidebook.domain.repository.GuideRepository
 import com.gm.ai.guidebook.model.Guide
 import com.gm.ai.guidebook.model.GuideDetails
+import com.gm.ai.guidebook.model.Step
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,6 +22,18 @@ class GuideRepositoryImpl @Inject constructor(
     private val guidesApi: GuidesApi,
     private val authDataStore: AuthDataStore,
 ) : GuideRepository {
+
+    private val stepsMap = mutableMapOf<String, List<Step>>()
+
+    override suspend fun getGuideSteps(id: String): List<Step> {
+        stepsMap[id]?.let { return it }
+        val steps = guidesApi.getGuideSteps(
+            token = getAccessToken(),
+            id = id,
+        ).map { it.toStep() }
+        stepsMap[id] = steps
+        return steps
+    }
 
     override suspend fun searchGuides(query: String): List<Guide> {
         return guidesApi.searchGuides(

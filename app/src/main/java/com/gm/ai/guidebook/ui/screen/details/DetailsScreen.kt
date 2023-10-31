@@ -1,26 +1,20 @@
 package com.gm.ai.guidebook.ui.screen.details
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -28,8 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -151,6 +143,29 @@ fun DetailsScreen(
             style = GuideTheme.typography.bodyMedium,
             color = GuideTheme.palette.onBackground,
         )
+        AnimatedVisibility(
+            modifier = Modifier.layoutId(STEPS_BUTTON),
+            visible = state.stepsButtonVisible,
+            enter = slideInHorizontally(
+                initialOffsetX = { fullWidth -> fullWidth * 2 },
+            ),
+            exit = slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth * 2 },
+            ),
+        ) {
+            FloatingActionButton(
+                onClick = {
+                    onEvent(DetailsEvent.OpenSteps)
+                },
+                containerColor = GuideTheme.palette.primary,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_forward),
+                    contentDescription = null,
+                    tint = GuideTheme.palette.background,
+                )
+            }
+        }
     }
 }
 
@@ -176,6 +191,7 @@ private fun detailsScreenDecoupledConstraints(): ConstraintSet {
         val topicTitleText = createRefFor(TOPIC_TITLE_TEXT)
         val topicDivider = createRefFor(TOPIC_DIVIDER)
         val descriptionTopicText = createRefFor(DESCRIPTION_TOPIC_TEXT)
+        val stepsButton = createRefFor(STEPS_BUTTON)
 
         constrain(backButton) {
             top.linkTo(anchor = parent.top, margin = mediumOffset)
@@ -237,6 +253,11 @@ private fun detailsScreenDecoupledConstraints(): ConstraintSet {
             end.linkTo(anchor = parent.end, margin = tinyOffset)
             width = Dimension.fillToConstraints
         }
+
+        constrain(stepsButton) {
+            bottom.linkTo(anchor = parent.bottom, margin = giganticOffset)
+            end.linkTo(anchor = parent.end, margin = regularOffset)
+        }
     }
 }
 
@@ -249,6 +270,7 @@ private const val LIKE_BUTTON = "like_button"
 private const val TOPIC_TITLE_TEXT = "topic_title_text"
 private const val DESCRIPTION_TOPIC_TEXT = "description_topic_text"
 private const val TOPIC_DIVIDER = "topic_divider"
+private const val STEPS_BUTTON = "steps_button"
 
 private const val MAX_AUTHOR_TEXT_LINES = 1
 private const val DIVIDER_ALPHA = 0.5f

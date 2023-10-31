@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,11 +39,15 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gm.ai.guidebook.R
+import com.gm.ai.guidebook.core.android.extensions.applyIf
 import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
+import com.gm.ai.guidebook.ui.components.GuideIconButton
 import com.gm.ai.guidebook.ui.navigation.GuideNavHost
 import com.gm.ai.guidebook.ui.navigation.components.GuideBottomNavigation
 import com.gm.ai.guidebook.ui.navigation.route.LoginScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
+import com.gm.ai.guidebook.ui.navigation.route.StepsScreenRoute
+import com.gm.ai.guidebook.ui.screen.steps.StepsEvent
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -96,6 +101,8 @@ class MainActivity : ComponentActivity() {
                     AnimatedTopBar(
                         modifier = Modifier,
                         visible = areBarsVisible,
+                        closeVisible = currentEntry?.destination?.route == StepsScreenRoute.routeWithArgs,
+                        closeClicked = { controller.popBackStack() },
                     )
                 },
                 content = {
@@ -139,8 +146,8 @@ class MainActivity : ComponentActivity() {
         currentEntry: NavBackStackEntry?,
     ): Boolean {
         return currentEntry != null &&
-            currentEntry.destination.route != SplashScreenRoute.route &&
-            currentEntry.destination.route != LoginScreenRoute.route
+                currentEntry.destination.route != SplashScreenRoute.route &&
+                currentEntry.destination.route != LoginScreenRoute.route
     }
 
     @Composable
@@ -171,6 +178,8 @@ class MainActivity : ComponentActivity() {
     private fun AnimatedTopBar(
         modifier: Modifier = Modifier,
         visible: Boolean,
+        closeVisible: Boolean = false,
+        closeClicked: () -> Unit = {},
     ) {
         AnimatedVisibility(
             modifier = modifier,
@@ -184,7 +193,10 @@ class MainActivity : ComponentActivity() {
                 animationSpec = tween(FIVE_HUNDRED_MILLIS.toInt()),
             ),
         ) {
-            GuideTopBar()
+            GuideTopBar(
+                closeVisible = closeVisible,
+                closeClicked = closeClicked,
+            )
         }
     }
 
@@ -192,6 +204,8 @@ class MainActivity : ComponentActivity() {
     @Preview
     private fun GuideTopBar(
         modifier: Modifier = Modifier,
+        closeClicked: () -> Unit = {},
+        closeVisible: Boolean = false,
     ) {
         Row(
             modifier = modifier
@@ -208,15 +222,27 @@ class MainActivity : ComponentActivity() {
                 contentDescription = null,
             )
             Text(
-                modifier = Modifier.padding(
-                    horizontal = GuideTheme.offset.medium,
-                ),
-                text = "GuideBook",
+                modifier = Modifier
+                    .padding(
+                        horizontal = GuideTheme.offset.medium,
+                    )
+                    .weight(1f),
+                text = stringResource(R.string.app_name),
                 style = GuideTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
                 ),
                 color = GuideTheme.palette.onBackground,
             )
+            AnimatedVisibility(
+                modifier = Modifier.padding(end = GuideTheme.offset.regular),
+                visible = closeVisible
+            ) {
+                GuideIconButton(
+                    iconResId = R.drawable.ic_close,
+                    tint = GuideTheme.palette.onBackground,
+                    onClick = closeClicked,
+                )
+            }
         }
     }
 }

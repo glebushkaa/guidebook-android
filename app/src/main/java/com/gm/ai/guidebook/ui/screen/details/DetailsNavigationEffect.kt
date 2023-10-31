@@ -7,12 +7,15 @@ package com.gm.ai.guidebook.ui.screen.details
 sealed class DetailsNavigationEffect {
 
     data object NavigateBack : DetailsNavigationEffect()
+    data class NavigateSteps(val guideId: String) : DetailsNavigationEffect()
 
     inline fun handle(
         navigateBack: () -> Unit = {},
+        navigateSteps: (String) -> Unit = {},
     ) {
         when (this) {
             NavigateBack -> navigateBack()
+            is NavigateSteps -> navigateSteps(guideId)
         }
     }
 }

@@ -31,6 +31,16 @@ object DetailsScreenRoute : GuideRoute {
     fun makeDetailsScreenRoute(id: String) = "$route/$id"
 }
 
+object StepsScreenRoute : GuideRoute {
+    override val route: String = "steps"
+    val routeWithArgs: String = "$route/{guideId}"
+    val arguments = listOf(
+        navArgument("guideId") { type = NavType.StringType },
+    )
+
+    fun makeStepsScreenRoute(id: String) = "$route/$id"
+}
+
 object FavoritesScreenRoute : BottomNavGuideRoute {
     override val route: String = "favorites"
     override val titleResId: Int = R.string.favorites

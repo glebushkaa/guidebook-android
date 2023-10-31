@@ -11,4 +11,7 @@ sealed class DetailsEvent {
     data object BackEvent : DetailsEvent()
     data class UpdateGuideDetails(val guideDetails: GuideDetails) : DetailsEvent()
     data object LikeClicked : DetailsEvent()
+    data object OpenSteps : DetailsEvent()
+    data object ShowStepsButton : DetailsEvent()
+    data object HideStepsButton : DetailsEvent()
 }

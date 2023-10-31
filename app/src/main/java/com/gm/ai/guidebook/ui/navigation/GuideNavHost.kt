@@ -11,11 +11,13 @@ import com.gm.ai.guidebook.ui.navigation.destination.homeScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.loginScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.settingsScreenDestination
 import com.gm.ai.guidebook.ui.navigation.destination.splashScreenDestination
+import com.gm.ai.guidebook.ui.navigation.destination.stepsScreenDestination
 import com.gm.ai.guidebook.ui.navigation.route.DetailsScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.HomeScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.LoginScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SettingsScreenRoute
 import com.gm.ai.guidebook.ui.navigation.route.SplashScreenRoute
+import com.gm.ai.guidebook.ui.navigation.route.StepsScreenRoute
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
@@ -53,9 +55,15 @@ fun GuideNavHost(
             val route = DetailsScreenRoute.makeDetailsScreenRoute(id = id)
             controller.navigate(route = route)
         }
-        detailsScreenDestination {
-            controller.popBackStack()
-        }
+        detailsScreenDestination(
+            navigateBack = {
+                controller.popBackStack()
+            },
+            navigateSteps = { guideId ->
+                val route = StepsScreenRoute.makeStepsScreenRoute(id = guideId)
+                controller.navigate(route = route)
+            }
+        )
         settingsScreenDestination {
             controller.navigatePopUpInclusive(
                 route = LoginScreenRoute.route,
@@ -69,5 +77,7 @@ fun GuideNavHost(
                 popUpRoute = LoginScreenRoute.route,
             )
         }
+
+        stepsScreenDestination()
     }
 }

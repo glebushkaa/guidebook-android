@@ -19,6 +19,7 @@ fun Modifier.applyIf(
     modifier: @Composable Modifier.() -> Modifier,
 ) = composed { if (condition) then(modifier()) else this }
 
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
 fun Modifier.clickableWithoutRipple(
     onClick: () -> Unit,
 ): Modifier = composed {

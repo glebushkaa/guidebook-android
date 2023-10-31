@@ -6,6 +6,7 @@ import com.gm.ai.guidebook.core.android.stateReducerFlow
 import com.gm.ai.guidebook.domain.usecase.favorite.AddGuideToFavoriteUseCase
 import com.gm.ai.guidebook.domain.usecase.favorite.RemoveGuideFromFavoriteUseCase
 import com.gm.ai.guidebook.domain.usecase.guides.GetGuideDetailsByIdUseCase
+import com.gm.ai.guidebook.domain.usecase.guides.GetGuideStepsUseCase
 import com.gm.ai.guidebook.model.GuideDetails
 import com.gm.ai.guidebook.model.emptyGuideDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,7 @@ class DetailsViewModel @Inject constructor(
     private val getGuideDetailsByIdUseCase: GetGuideDetailsByIdUseCase,
     private val removeGuideFromFavoriteUseCase: RemoveGuideFromFavoriteUseCase,
     private val addGuideToFavoriteUseCase: AddGuideToFavoriteUseCase,
+    private val getGuideStepsUseCase: GetGuideStepsUseCase,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
@@ -36,6 +38,18 @@ class DetailsViewModel @Inject constructor(
 
     init {
         getGuideDetails()
+        fetchGuideSteps()
+    }
+
+    private fun fetchGuideSteps() = viewModelScope.launch(Dispatchers.IO) {
+        val params = GetGuideStepsUseCase.Params(guideId = guideId)
+        val list = getGuideStepsUseCase(params).getOrNull() ?: emptyList()
+        val event = if (list.isNotEmpty()) {
+            DetailsEvent.ShowStepsButton
+        } else {
+            DetailsEvent.HideStepsButton
+        }
+        state.handleEvent(event)
     }
 
     private fun getGuideDetails() = viewModelScope.launch(Dispatchers.IO) {
@@ -63,14 +77,29 @@ class DetailsViewModel @Inject constructor(
                 val navEffect = DetailsNavigationEffect.NavigateBack
                 navigationEffect.trySend(navEffect)
             }
+
             is DetailsEvent.UpdateGuideDetails -> {
                 return currentState.copy(guide = event.guideDetails)
             }
+
             DetailsEvent.LikeClicked -> {
                 val currentGuide = currentState.guide
                 val newGuide = currentState.guide.copy(favorite = !currentGuide.favorite)
                 handleLikeClickedEvent(currentGuide)
                 return currentState.copy(guide = newGuide)
+            }
+
+            DetailsEvent.OpenSteps -> {
+                val navEffect = DetailsNavigationEffect.NavigateSteps(currentState.guide.id)
+                navigationEffect.trySend(navEffect)
+            }
+
+            DetailsEvent.HideStepsButton -> {
+                return currentState.copy(stepsButtonVisible = false)
+            }
+
+            DetailsEvent.ShowStepsButton -> {
+                return currentState.copy(stepsButtonVisible = true)
             }
         }
         return currentState

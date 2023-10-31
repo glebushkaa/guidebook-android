@@ -2,6 +2,7 @@ package com.gm.ai.guidebook.data.network
 
 import com.gm.ai.guidebook.data.network.dto.guide.GuideDetailsDto
 import com.gm.ai.guidebook.data.network.dto.guide.GuideDto
+import com.gm.ai.guidebook.data.network.dto.guide.GuideStepDto
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -24,4 +25,10 @@ interface GuidesApi {
         @Header("Authorization") token: String,
         @Path(value = "guideId") id: String,
     ): GuideDetailsDto
+
+    @GET("guide/{guideId}/steps")
+    suspend fun getGuideSteps(
+        @Header("Authorization") token: String,
+        @Path(value = "guideId") id: String,
+    ): List<GuideStepDto>
 }
