@@ -6,6 +6,7 @@ import com.gm.ai.guidebook.data.network.dto.auth.AuthResponse
 import com.gm.ai.guidebook.data.network.dto.auth.SignInDto
 import com.gm.ai.guidebook.data.network.dto.auth.SignOutDto
 import com.gm.ai.guidebook.data.network.dto.error.LoginErrorResponse
+import com.gm.ai.guidebook.domain.SessionBus
 import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import com.gm.ai.guidebook.domain.exception.AuthException
 import com.gm.ai.guidebook.domain.repository.AuthRepository

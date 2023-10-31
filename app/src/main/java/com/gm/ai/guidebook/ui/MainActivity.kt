@@ -23,11 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,8 +43,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gm.ai.guidebook.R
 import com.gm.ai.guidebook.core.android.extensions.applyIf
+import com.gm.ai.guidebook.core.android.extensions.navigatePopUpInclusive
 import com.gm.ai.guidebook.core.common.FIVE_HUNDRED_MILLIS
+import com.gm.ai.guidebook.domain.SessionBus
 import com.gm.ai.guidebook.ui.components.GuideIconButton
+import com.gm.ai.guidebook.ui.dialogs.SessionExpiredDialog
 import com.gm.ai.guidebook.ui.navigation.GuideNavHost
 import com.gm.ai.guidebook.ui.navigation.components.GuideBottomNavigation
 import com.gm.ai.guidebook.ui.navigation.route.LoginScreenRoute
@@ -51,6 +57,7 @@ import com.gm.ai.guidebook.ui.screen.steps.StepsEvent
 import com.gm.ai.guidebook.ui.theme.GuideBookTheme
 import com.gm.ai.guidebook.ui.theme.GuideTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.consumeAsFlow
 
 /**
  * Created by gle.bushkaa email(gleb.mokryy@gmail.com) on 10/26/2023
@@ -86,9 +93,36 @@ class MainActivity : ComponentActivity() {
             derivedStateOf { checkAreBarsVisible(currentEntry) }
         }
 
+        val sessionAlive by SessionBus.sessionAlive
+            .consumeAsFlow()
+            .collectAsStateWithLifecycle(initialValue = true)
+
+        var dialogVisible by remember { mutableStateOf(false) }
+
+        if (dialogVisible) {
+            SessionExpiredDialog {
+                dialogVisible = false
+                controller.navigatePopUpInclusive(
+                    route = LoginScreenRoute.route,
+                    popUpRoute = currentEntry?.destination?.route ?: ""
+                )
+            }
+        }
+
+        LaunchedEffect(
+            key1 = sessionAlive,
+        ) {
+            if (
+                sessionAlive ||
+                !checkSessionExpiredDialogRoute(currentEntry?.destination?.route)
+            ) return@LaunchedEffect
+            dialogVisible = true
+        }
+
         GuideBookTheme(
             darkTheme = darkModeEnabled ?: systemDarkModeEnabled,
-        ) {
+        )
+        {
             val view = LocalView.current
             val backgroundColor = GuideTheme.palette.background
             val surfaceColor = GuideTheme.palette.surface
@@ -140,6 +174,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun checkSessionExpiredDialogRoute(
+        currentRoute: String?,
+    ): Boolean {
+        return currentRoute != SplashScreenRoute.route && currentRoute != LoginScreenRoute.route
     }
 
     private fun checkAreBarsVisible(
@@ -209,7 +249,9 @@ class MainActivity : ComponentActivity() {
     ) {
         Row(
             modifier = modifier
-                .height(56.dp)
+                .height(
+                    dimensionResource(R.dimen.top_bar_height)
+                )
                 .fillMaxWidth()
                 .background(GuideTheme.palette.surface),
             verticalAlignment = Alignment.CenterVertically,
@@ -217,7 +259,9 @@ class MainActivity : ComponentActivity() {
             Image(
                 modifier = Modifier
                     .padding(start = GuideTheme.offset.regular)
-                    .size(32.dp),
+                    .size(
+                        dimensionResource(R.dimen.top_bar_image_size)
+                    ),
                 painter = painterResource(id = R.drawable.img_book),
                 contentDescription = null,
             )

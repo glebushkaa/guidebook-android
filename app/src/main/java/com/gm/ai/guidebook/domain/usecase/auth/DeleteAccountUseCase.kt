@@ -1,5 +1,6 @@
 package com.gm.ai.guidebook.domain.usecase.auth
 
+import com.gm.ai.guidebook.domain.SessionBus
 import com.gm.ai.guidebook.domain.datastore.AuthDataStore
 import com.gm.ai.guidebook.domain.repository.AuthRepository
 import com.gm.ai.guidebook.domain.usecase.core.ResultSuspendNoneParamsUseCase

@@ -4,6 +4,7 @@
     <dimen name="guide_item_height">100dp</dimen>
     <dimen name="search_min_height">54dp</dimen>
     <dimen name="confirmation_button_row_height">56dp</dimen>
+    <dimen name="session_expired_button_height">56dp</dimen>
     <dimen name="vertical_confirmation_divider_width">1dp</dimen>
 
     <dimen name="bottom_nav_bar_height">72dp</dimen>
@@ -30,5 +31,8 @@
 
     <dimen name="pager_controller_section_height">40dp</dimen>
     <dimen name="step_image_height">300dp</dimen>
+
+    <dimen name="top_bar_image_size">32dp</dimen>
+    <dimen name="top_bar_height">56dp</dimen>
 
 </resources>
