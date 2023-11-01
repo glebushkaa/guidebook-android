@@ -34,5 +34,6 @@
 
     <dimen name="top_bar_image_size">32dp</dimen>
     <dimen name="top_bar_height">56dp</dimen>
+    <dimen name="progress_indicator_size">60dp</dimen>
 
 </resources>

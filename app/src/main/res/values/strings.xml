@@ -28,5 +28,7 @@
     <string name="no_favorites_found">No favorites found</string>
     <string name="username">Username</string>
     <string name="ok">OK</string>
+    <string name="session_expired_description">Your session has expired. Please sign in again</string>
+    <string name="session_expired">Session expired</string>
 
 </resources>

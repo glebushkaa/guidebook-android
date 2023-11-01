@@ -60,7 +60,7 @@ private fun SessionExpiredDialogContent(
             modifier = Modifier.padding(
                 top = GuideTheme.offset.regular,
             ),
-            text = "Session expired",
+            text = stringResource(R.string.session_expired),
             style = GuideTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Medium,
             ),
@@ -72,7 +72,7 @@ private fun SessionExpiredDialogContent(
                 start = GuideTheme.offset.huge,
                 end = GuideTheme.offset.huge,
             ),
-            text = "Your session has expired. Please sign in again to continue using the app.",
+            text = stringResource(R.string.session_expired_description),
             style = GuideTheme.typography.bodyMedium,
             color = GuideTheme.palette.onSurface.copy(
                 alpha = DESCRIPTION_TEXT_ALPHA
