@@ -14,6 +14,7 @@ import com.gm.ai.guidebook.ui.theme.GuideTheme.typography
 val LocalTypography = staticCompositionLocalOf { GuideTypography() }
 val LocalPalette = staticCompositionLocalOf { Palette() }
 val LocalOffset = staticCompositionLocalOf { Offset() }
+val LocalShapes = staticCompositionLocalOf { Shape() }
 
 @Composable
 fun GuideBookTheme(
@@ -28,8 +29,8 @@ fun GuideBookTheme(
             window.statusBarColor = palette.background.toArgb()
             window.navigationBarColor = palette.background.toArgb()
             WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = darkTheme
-                isAppearanceLightNavigationBars = darkTheme
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
             }
         }
     }
@@ -52,4 +53,8 @@ object GuideTheme {
     val offset: Offset
         @Composable
         get() = LocalOffset.current
+
+    val shape: Shape
+        @Composable
+        get() = LocalShapes.current
 }

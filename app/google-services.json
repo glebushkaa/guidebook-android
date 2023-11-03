@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "392387224684",
+    "project_id": "guidebook-android-gm",
+    "storage_bucket": "guidebook-android-gm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392387224684:android:0f1eef2725ff6c8130e449",
+        "android_client_info": {
+          "package_name": "com.gm.ai.guidebook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDldsu_iA5bgqERHSpL8rhF-jXTED6wIa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

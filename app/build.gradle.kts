@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
     kotlin("kapt")
 }
 
@@ -24,8 +26,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
         release {
-            isMinifyEnabled = false
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -33,11 +39,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures.compose = true
     composeOptions.kotlinCompilerExtensionVersion = "1.5.3"
@@ -62,6 +68,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity.compose)
 
+    implementation(libs.lifecycle.runtime.compose)
+
+    implementation(libs.coil.compose)
+
+    implementation(libs.androidx.data.store)
+
     implementation(libs.androidx.appcompat)
     implementation(libs.timber)
 
@@ -72,6 +84,8 @@ dependencies {
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.okhttp3)
     implementation(libs.gson)
+
+    implementation(libs.firebase.crashlytics.ktx)
 
     implementation(libs.glide)
 

@@ -3,6 +3,7 @@ package com.gm.ai.guidebook.core.android
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
@@ -34,14 +35,14 @@ class StateReducerFlowImpl<State, Action> @Inject constructor(
         stateFlow.collect(collector)
     }
 
-    override fun handleAction(action: Action) {
+    override fun handleEvent(action: Action) {
         events.trySend(action)
     }
 }
 
 fun <State, Event> BaseViewModel.stateReducerFlow(
     initialState: State,
-    reduceState: suspend (State, Event) -> State,
+    reduceState: suspend (State, Event) -> State = { it, _ -> it },
 ): StateReducerFlow<State, Event> {
     return StateReducerFlowImpl(initialState, reduceState, viewModelScope)
 }
