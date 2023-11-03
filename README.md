@@ -43,7 +43,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 1. Clone the repository to your local machine using Git:
 
 ```shell
- git clone https://github.com/yourusername/guidebook-android.git
+ git clone https://github.com/glebushkaa/guidebook-android
 ```
 
 2. Open the project in Android Studio.
