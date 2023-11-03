@@ -9,9 +9,11 @@ import com.gm.ai.guidebook.model.GuideDetails
 sealed class DetailsEvent {
 
     data object BackEvent : DetailsEvent()
-    data class UpdateGuideDetails(val guideDetails: GuideDetails) : DetailsEvent()
+    data class UpdateGuideDetails(
+        val guideDetails: GuideDetails,
+        val stepsVisible: Boolean = false,
+    ) : DetailsEvent()
+
     data object LikeClicked : DetailsEvent()
     data object OpenSteps : DetailsEvent()
-    data object ShowStepsButton : DetailsEvent()
-    data object HideStepsButton : DetailsEvent()
 }

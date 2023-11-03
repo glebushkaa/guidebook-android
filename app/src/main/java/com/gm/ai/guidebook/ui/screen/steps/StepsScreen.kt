@@ -28,8 +28,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -201,25 +204,35 @@ private fun StepContent(step: Step) {
                 .fillMaxWidth()
                 .height(
                     dimensionResource(R.dimen.step_image_height)
-                ),
+                )
+                .clip(GuideTheme.shape.huge),
             contentAlignment = Alignment.Center
         ) {
             if (!imageLoaded) {
                 CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(dimensionResource(R.dimen.progress_indicator_size)),
+                    modifier = Modifier.size(dimensionResource(R.dimen.progress_indicator_size)),
                     color = GuideTheme.palette.primary,
                 )
             }
             AsyncImage(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .clip(GuideTheme.shape.huge),
+                    .alpha(BACKGROUND_IMAGE_ALPHA)
+                    .matchParentSize(),
+                onState = {
+                    imageLoaded = it is AsyncImagePainter.State.Success
+                },
+                contentScale = ContentScale.Crop,
+                model = step.imageUrl,
+                contentDescription = null,
+            )
+            AsyncImage(
+                modifier = Modifier.fillMaxWidth(),
                 onState = {
                     imageLoaded = it is AsyncImagePainter.State.Success
                 },
                 model = step.imageUrl,
-                contentDescription = step.title,
+                contentScale = ContentScale.FillWidth,
+                contentDescription = null,
             )
         }
         Text(
@@ -248,3 +261,4 @@ private fun StepContent(step: Step) {
 }
 
 private const val BACKWARD_ICON_ROTATE_ANGLE = 180f
+private const val BACKGROUND_IMAGE_ALPHA = 0.2f

@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
@@ -96,7 +97,9 @@ fun DetailsScreen(
             color = GuideTheme.palette.onBackground,
         )
         Box(
-            modifier = Modifier.layoutId(DETAILS_IMAGE),
+            modifier = Modifier
+                .clip(GuideTheme.shape.huge)
+                .layoutId(DETAILS_IMAGE),
             contentAlignment = Alignment.Center
         ) {
             if (!imageLoaded) {
@@ -108,12 +111,21 @@ fun DetailsScreen(
             }
             AsyncImage(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .clip(GuideTheme.shape.huge),
+                    .alpha(BACKGROUND_IMAGE_ALPHA)
+                    .matchParentSize(),
                 onState = {
                     imageLoaded = it is AsyncImagePainter.State.Success
                 },
                 contentScale = ContentScale.Crop,
+                model = state.guide.imageUrl,
+                contentDescription = null,
+            )
+            AsyncImage(
+                modifier = Modifier.matchParentSize(),
+                onState = {
+                    imageLoaded = it is AsyncImagePainter.State.Success
+                },
+                contentScale = ContentScale.FillWidth,
                 model = state.guide.imageUrl,
                 contentDescription = null,
             )
@@ -232,7 +244,7 @@ private fun detailsScreenDecoupledConstraints(): ConstraintSet {
             top.linkTo(anchor = backButton.top)
             bottom.linkTo(anchor = backButton.bottom)
             start.linkTo(anchor = parent.start)
-            end.linkTo(anchor = parent.end)
+            end.linkTo(anchor = parent.end, margin = regularOffset)
         }
 
         constrain(detailsImage) {
@@ -302,3 +314,4 @@ private const val STEPS_BUTTON = "steps_button"
 
 private const val MAX_AUTHOR_TEXT_LINES = 1
 private const val DIVIDER_ALPHA = 0.5f
+private const val BACKGROUND_IMAGE_ALPHA = 0.2f

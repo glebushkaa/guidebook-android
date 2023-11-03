@@ -11,6 +11,7 @@ import com.gm.ai.guidebook.model.GuideDetails
 import com.gm.ai.guidebook.model.emptyGuideDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,25 +38,22 @@ class DetailsViewModel @Inject constructor(
     private val guideId = savedStateHandle["guideId"] ?: ""
 
     init {
-        getGuideDetails()
-        fetchGuideSteps()
+        fetchGuideDetails()
     }
 
-    private fun fetchGuideSteps() = viewModelScope.launch(Dispatchers.IO) {
-        val params = GetGuideStepsUseCase.Params(guideId = guideId)
-        val list = getGuideStepsUseCase(params).getOrNull() ?: emptyList()
-        val event = if (list.isNotEmpty()) {
-            DetailsEvent.ShowStepsButton
-        } else {
-            DetailsEvent.HideStepsButton
+    private fun fetchGuideDetails() = viewModelScope.launch(Dispatchers.IO) {
+        val params = GetGuideDetailsByIdUseCase.Params(id = guideId)
+        val stepsParams = GetGuideStepsUseCase.Params(guideId = guideId)
+        val details = async {
+            getGuideDetailsByIdUseCase(params).getOrNull() ?: emptyGuideDetails()
         }
-        state.handleEvent(event)
-    }
-
-    private fun getGuideDetails() = viewModelScope.launch(Dispatchers.IO) {
-        val params = GetGuideDetailsByIdUseCase.Params(guideId)
-        val details = getGuideDetailsByIdUseCase(params).getOrNull() ?: return@launch
-        val event = DetailsEvent.UpdateGuideDetails(details)
+        val steps = async {
+            getGuideStepsUseCase(stepsParams).getOrNull() ?: emptyList()
+        }
+        val event = DetailsEvent.UpdateGuideDetails(
+            guideDetails = details.await(),
+            stepsVisible = steps.await().isNotEmpty(),
+        )
         state.handleEvent(event)
     }
 
@@ -79,7 +77,10 @@ class DetailsViewModel @Inject constructor(
             }
 
             is DetailsEvent.UpdateGuideDetails -> {
-                return currentState.copy(guide = event.guideDetails)
+                return currentState.copy(
+                    guide = event.guideDetails,
+                    stepsButtonVisible  = event.stepsVisible,
+                )
             }
 
             DetailsEvent.LikeClicked -> {
@@ -92,14 +93,6 @@ class DetailsViewModel @Inject constructor(
             DetailsEvent.OpenSteps -> {
                 val navEffect = DetailsNavigationEffect.NavigateSteps(currentState.guide.id)
                 navigationEffect.trySend(navEffect)
-            }
-
-            DetailsEvent.HideStepsButton -> {
-                return currentState.copy(stepsButtonVisible = false)
-            }
-
-            DetailsEvent.ShowStepsButton -> {
-                return currentState.copy(stepsButtonVisible = true)
             }
         }
         return currentState
