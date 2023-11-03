@@ -1,6 +1,6 @@
 # GuideBook - Android App
 
-![Kotlin](https://img.shields.io/badge/Kotlin-1.5-orange.svg)
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9-orange.svg)
 ![Platform](https://img.shields.io/badge/Platform-Android-brightgreen.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
