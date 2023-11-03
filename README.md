@@ -29,7 +29,7 @@ GuideBook is a feature-rich Android app that allows users to explore, view, and 
 
 ## Key Features
 
-- Browse and view travel guides.
+- Browse and view guides.
 - Mark guides as favorites.
 - User-friendly and intuitive interface.
 - Rich multimedia content.
